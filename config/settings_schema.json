@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "name": "theme_info",
+    "theme_name": "LitterLoops High-Converting DTC Theme",
+    "theme_version": "1.0.0",
+    "theme_author": "Shopify Senior Theme Architect",
+    "theme_documentation_url": "https://github.com/Gpstrackergsm/loops",
+    "theme_support_url": "https://github.com/Gpstrackergsm/loops"
+  },
+  {
+    "name": "Favicon & Branding",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Custom Favicon Image",
+        "info": "Will be scaled down to 32x32px and 180x180px for Apple Touch Icon."
+      }
+    ]
+  }
+]
