@@ -344,13 +344,109 @@
 
   .ll-product-illustration {
     width: 100%;
-    height: 380px;
+    height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: radial-gradient(circle, #f0fdfa 0%, #e2e8f0 100%);
     border-radius: var(--ll-radius-lg);
     position: relative;
+    overflow: hidden;
+  }
+
+  .ll-gallery-main-img {
+    max-width: 100%;
+    max-height: 380px;
+    object-fit: contain;
+    border-radius: var(--ll-radius-md);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+
+  .ll-gallery-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid var(--ll-border);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    color: var(--ll-dark);
+  }
+
+  .ll-gallery-nav-btn:hover {
+    background: var(--ll-primary);
+    color: white;
+    transform: translateY(-50%) scale(1.08);
+  }
+
+  .ll-gallery-nav-prev { left: 12px; }
+  .ll-gallery-nav-next { right: 12px; }
+
+  .ll-gallery-count {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(15, 23, 42, 0.75);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: var(--ll-radius-full);
+    backdrop-filter: blur(4px);
+    z-index: 10;
+  }
+
+  .ll-thumbnails-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    overflow-x: auto;
+    padding: 4px 2px;
+    scrollbar-width: thin;
+  }
+
+  .ll-thumb-btn {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--ll-radius-md);
+    border: 2px solid transparent;
+    padding: 3px;
+    background: var(--ll-white);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ll-thumb-btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    display: block;
+  }
+
+  .ll-thumb-btn.active {
+    border-color: var(--ll-primary);
+    box-shadow: 0 0 0 2px var(--ll-primary-light);
+    transform: scale(1.04);
+  }
+
+  .ll-thumb-btn:hover {
+    border-color: #99f6e4;
   }
 
   .ll-interactive-highlights {
@@ -1084,16 +1180,26 @@
               <span>SAVE {{ discount_percent }}%</span>
             </div>
 
-            <div class="ll-product-illustration">
-              {% if current_product.featured_image != blank %}
+            <div class="ll-product-illustration" id="ll-gallery-viewport">
+              {% if current_product.images.size > 0 %}
                 <img 
-                  src="{{ current_product.featured_image | img_url: '800x800', crop: 'center' }}" 
+                  id="ll-main-product-image"
+                  class="ll-gallery-main-img"
+                  src="{{ current_product.featured_image | img_url: '900x900' }}" 
                   alt="{{ current_product.title | escape }}" 
-                  style="max-width: 100%; max-height: 360px; object-fit: contain; border-radius: var(--ll-radius-md);"
                   loading="eager"
                 >
+                {% if current_product.images.size > 1 %}
+                  <button type="button" class="ll-gallery-nav-btn ll-gallery-nav-prev" id="ll-gallery-prev" aria-label="Previous photo">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                  </button>
+                  <button type="button" class="ll-gallery-nav-btn ll-gallery-nav-next" id="ll-gallery-next" aria-label="Next photo">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                  </button>
+                  <div class="ll-gallery-count" id="ll-gallery-counter">1 / {{ current_product.images.size }}</div>
+                {% endif %}
               {% else %}
-                <!-- Visual Product Graphic -->
+                <!-- Visual Product Graphic Fallback -->
                 <svg width="260" height="260" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <circle cx="100" cy="100" r="85" fill="#ffffff" stroke="#0d9488" stroke-width="6" stroke-dasharray="8 6"/>
                   <circle cx="100" cy="100" r="70" fill="#f0fdfa"/>
@@ -1109,6 +1215,23 @@
                 </svg>
               {% endif %}
             </div>
+
+            {% if current_product.images.size > 1 %}
+              <!-- Interactive Thumbnails Carousel -->
+              <div class="ll-thumbnails-row" id="ll-thumbnails-row">
+                {% for image in current_product.images %}
+                  <button 
+                    type="button" 
+                    class="ll-thumb-btn {% if forloop.first %}active{% endif %}" 
+                    data-img-src="{{ image | img_url: '900x900' }}"
+                    data-index="{{ forloop.index }}"
+                    aria-label="View photo {{ forloop.index }}"
+                  >
+                    <img src="{{ image | img_url: '160x160', crop: 'center' }}" alt="{{ image.alt | default: current_product.title | escape }}">
+                  </button>
+                {% endfor %}
+              </div>
+            {% endif %}
 
             <div class="ll-interactive-highlights">
               <div class="ll-highlight-box">
@@ -1541,6 +1664,61 @@
 <!-- High-Converting Direct-to-Checkout Script -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // 0. Interactive Product Gallery Multi-Image Switcher
+    const mainImg = document.getElementById('ll-main-product-image');
+    const thumbBtns = document.querySelectorAll('.ll-thumb-btn');
+    const prevBtn = document.getElementById('ll-gallery-prev');
+    const nextBtn = document.getElementById('ll-gallery-next');
+    const counter = document.getElementById('ll-gallery-counter');
+    let currentIndex = 0;
+
+    function switchImage(index) {
+      if (!thumbBtns.length || !mainImg) return;
+      if (index < 0) index = thumbBtns.length - 1;
+      if (index >= thumbBtns.length) index = 0;
+      currentIndex = index;
+
+      const targetBtn = thumbBtns[currentIndex];
+      const newSrc = targetBtn.getAttribute('data-img-src');
+
+      mainImg.style.opacity = '0.35';
+      mainImg.style.transform = 'scale(0.97)';
+      
+      setTimeout(() => {
+        mainImg.src = newSrc;
+        mainImg.style.opacity = '1';
+        mainImg.style.transform = 'scale(1)';
+      }, 150);
+
+      thumbBtns.forEach(btn => btn.classList.remove('active'));
+      targetBtn.classList.add('active');
+
+      if (counter) {
+        counter.textContent = `${currentIndex + 1} / ${thumbBtns.length}`;
+      }
+
+      // Scroll thumbnail into view smoothly if needed
+      targetBtn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+    }
+
+    thumbBtns.forEach((btn, idx) => {
+      btn.addEventListener('click', () => switchImage(idx));
+    });
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchImage(currentIndex - 1);
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        switchImage(currentIndex + 1);
+      });
+    }
+
     // 1. FAQ Accordion Toggle
     const faqItems = document.querySelectorAll('.ll-faq-item');
     faqItems.forEach(item => {
