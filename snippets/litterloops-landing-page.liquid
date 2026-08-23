@@ -27,12 +27,13 @@
 
   assign current_variant = current_product.selected_or_first_available_variant
   assign variant_id = current_variant.id
-  assign price = current_variant.price | default: 7900
-  assign compare_price = current_variant.compare_at_price | default: 14900
+  assign price = current_variant.price | default: 14999
+  assign compare_price = current_variant.compare_at_price | default: 17999
   if compare_price <= price
-    assign compare_price = 14900
+    assign compare_price = 17999
   endif
-  assign discount_percent = compare_price | minus: price | times: 100.0 | divided_by: compare_price | round
+  assign savings_amount = compare_price | minus: price
+  assign discount_percent = savings_amount | times: 100.0 | divided_by: compare_price | round
 -%}
 
 <!-- Google Fonts -->
@@ -1043,7 +1044,7 @@
 <div class="ll-page">
   <!-- 1. TOP ANNOUNCEMENT BAR -->
   <div class="ll-announcement-bar">
-    🔥 <strong>SPRING LAUNCH SALE:</strong> Save $70 OFF + Free Express Delivery & 60-Day In-Home Trial!
+    🔥 <strong>SPRING LAUNCH SALE:</strong> Save {{ savings_amount | money }} OFF + Free Express Delivery & 60-Day In-Home Trial!
   </div>
 
   <!-- 2. STICKY HEADER -->
@@ -1065,7 +1066,7 @@
         </div>
 
         <a href="#order" class="ll-btn ll-btn-primary ll-btn-sm">
-          Order Now — ${{ price | money_without_currency | remove: '.00' }}
+          Order Now — {{ price | money }}
         </a>
       </div>
     </div>
@@ -1083,7 +1084,7 @@
               <span>⚡ 2026 Innovation</span>
             </div>
             <div class="ll-floating-pill ll-floating-pill-right">
-              <span>SAVE 47%</span>
+              <span>SAVE {{ discount_percent }}%</span>
             </div>
 
             <div class="ll-product-illustration">
@@ -1168,9 +1169,9 @@
           <div class="ll-pricing-card">
             <div class="ll-pricing-header">
               <div class="ll-price-wrap">
-                <span class="ll-current-price">${{ price | money_without_currency | remove: '.00' }}</span>
-                <span class="ll-compare-price">${{ compare_price | money_without_currency | remove: '.00' }}</span>
-                <span class="ll-save-badge">SAVE {{ discount_percent }}% ($70 OFF)</span>
+                <span class="ll-current-price">{{ price | money }}</span>
+                <span class="ll-compare-price">{{ compare_price | money }}</span>
+                <span class="ll-save-badge">SAVE {{ discount_percent }}% ({{ savings_amount | money }} OFF)</span>
               </div>
             </div>
 
@@ -1184,7 +1185,7 @@
               <input type="hidden" name="quantity" value="1">
 
               <button type="submit" class="ll-btn ll-btn-primary ll-btn-block ll-btn-pulse" id="ll-checkout-btn">
-                <span>CLAIM YOUR LITTERLOOPS — $79</span>
+                <span>CLAIM YOUR LITTERLOOPS — {{ price | money }}</span>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
@@ -1276,7 +1277,7 @@
           <tbody>
             <tr>
               <td class="ll-feature-title">Retail Price</td>
-              <td class="ll-col-highlight"><strong>$79.00 (One-Time)</strong></td>
+              <td class="ll-col-highlight"><strong>{{ price | money }} (One-Time)</strong></td>
               <td>$499 – $799 + subscription</td>
               <td>$20 – $40</td>
             </tr>
@@ -1501,13 +1502,13 @@
         <p>Join 4,200+ satisfied cat parents who simplified their daily routine. Get LitterLoops today at our lowest launch price ever.</p>
         
         <div style="display:inline-block; margin-bottom: 24px;">
-          <span style="font-size: 2.5rem; font-weight: 900; font-family: var(--ll-font-heading);">${{ price | money_without_currency | remove: '.00' }}</span>
-          <span style="font-size: 1.3rem; color: #94a3b8; text-decoration: line-through; margin-left: 10px;">${{ compare_price | money_without_currency | remove: '.00' }}</span>
+          <span style="font-size: 2.5rem; font-weight: 900; font-family: var(--ll-font-heading);">{{ price | money }}</span>
+          <span style="font-size: 1.3rem; color: #94a3b8; text-decoration: line-through; margin-left: 10px;">{{ compare_price | money }}</span>
         </div>
 
         <div>
           <a href="#order" class="ll-btn ll-btn-primary ll-btn-pulse" style="padding: 20px 48px; font-size: 1.25rem;">
-            CLAIM YOUR $70 DISCOUNT NOW
+            CLAIM YOUR {{ savings_amount | money }} DISCOUNT NOW
           </a>
         </div>
 
@@ -1524,7 +1525,7 @@
       <div class="ll-sticky-thumb">🐱</div>
       <div>
         <div class="ll-sticky-title">LitterLoops™</div>
-        <div class="ll-sticky-price">${{ price | money_without_currency | remove: '.00' }} <span style="font-size:0.75rem; color:#94a3b8; text-decoration:line-through;">${{ compare_price | money_without_currency | remove: '.00' }}</span></div>
+        <div class="ll-sticky-price">{{ price | money }} <span style="font-size:0.75rem; color:#94a3b8; text-decoration:line-through;">{{ compare_price | money }}</span></div>
       </div>
     </div>
     <a href="#order" class="ll-btn ll-btn-primary ll-btn-sm" id="ll-sticky-buy-btn">

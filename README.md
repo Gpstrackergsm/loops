@@ -2,7 +2,7 @@
 
 > **Product**: LitterLoops™ Non-Electric Self-Cleaning Cat Litter Box  
 > **Tagline**: *Turn. Separate. Empty. Done.*  
-> **Launch Price**: $79.00 (Regular: $149.00 - Save $70)
+> **Sale Price**: $149.99 (Regular Price: $179.99 - Save $30)
 
 ---
 
