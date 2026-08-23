@@ -9,8 +9,20 @@
 
 {%- liquid
   assign current_product = product
-  if current_product == nil and all_products['litterloops'] != blank
-    assign current_product = all_products['litterloops']
+  if current_product == nil
+    if all_products['litterloops-non-electric-self-cleaning-cat-litter-box'] != blank
+      assign current_product = all_products['litterloops-non-electric-self-cleaning-cat-litter-box']
+    elsif all_products['litterloops™-non-electric-self-cleaning-cat-litter-box'] != blank
+      assign current_product = all_products['litterloops™-non-electric-self-cleaning-cat-litter-box']
+    elsif all_products['litterloops'] != blank
+      assign current_product = all_products['litterloops']
+    elsif collections.frontpage.products.first != blank
+      assign current_product = collections.frontpage.products.first
+    elsif collections['home-page'].products.first != blank
+      assign current_product = collections['home-page'].products.first
+    elsif collections.all.products.first != blank
+      assign current_product = collections.all.products.first
+    endif
   endif
 
   assign current_variant = current_product.selected_or_first_available_variant
@@ -1075,20 +1087,29 @@
             </div>
 
             <div class="ll-product-illustration">
-              <!-- Visual Product Graphic -->
-              <svg width="260" height="260" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="100" cy="100" r="85" fill="#ffffff" stroke="#0d9488" stroke-width="6" stroke-dasharray="8 6"/>
-                <circle cx="100" cy="100" r="70" fill="#f0fdfa"/>
-                <ellipse cx="100" cy="115" rx="50" ry="30" fill="#cbd5e1"/>
-                <path d="M70 95 Q100 120 130 95" stroke="#0d9488" stroke-width="5" stroke-linecap="round" fill="none"/>
-                <!-- Rotation Indicator Arrow -->
-                <path d="M140 70 A 55 55 0 0 1 155 105" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" fill="none"/>
-                <polygon points="155,100 159,112 147,108" fill="#f59e0b"/>
-                <circle cx="100" cy="85" r="16" fill="#0f766e"/>
-                <!-- Cat ears silhouette -->
-                <polygon points="88,75 92,60 100,72" fill="#0f766e"/>
-                <polygon points="112,75 108,60 100,72" fill="#0f766e"/>
-              </svg>
+              {% if current_product.featured_image != blank %}
+                <img 
+                  src="{{ current_product.featured_image | img_url: '800x800', crop: 'center' }}" 
+                  alt="{{ current_product.title | escape }}" 
+                  style="max-width: 100%; max-height: 360px; object-fit: contain; border-radius: var(--ll-radius-md);"
+                  loading="eager"
+                >
+              {% else %}
+                <!-- Visual Product Graphic -->
+                <svg width="260" height="260" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="100" cy="100" r="85" fill="#ffffff" stroke="#0d9488" stroke-width="6" stroke-dasharray="8 6"/>
+                  <circle cx="100" cy="100" r="70" fill="#f0fdfa"/>
+                  <ellipse cx="100" cy="115" rx="50" ry="30" fill="#cbd5e1"/>
+                  <path d="M70 95 Q100 120 130 95" stroke="#0d9488" stroke-width="5" stroke-linecap="round" fill="none"/>
+                  <!-- Rotation Indicator Arrow -->
+                  <path d="M140 70 A 55 55 0 0 1 155 105" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" fill="none"/>
+                  <polygon points="155,100 159,112 147,108" fill="#f59e0b"/>
+                  <circle cx="100" cy="85" r="16" fill="#0f766e"/>
+                  <!-- Cat ears silhouette -->
+                  <polygon points="88,75 92,60 100,72" fill="#0f766e"/>
+                  <polygon points="112,75 108,60 100,72" fill="#0f766e"/>
+                </svg>
+              {% endif %}
             </div>
 
             <div class="ll-interactive-highlights">
