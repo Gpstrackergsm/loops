@@ -1,6 +1,6 @@
 {% comment %}
   =============================================================================
-  LitterLoops™ — High-Converting Single Product Landing Page
+  LitterLoops™ — High-Converting Single Product Landing Page (CRO 2.0 Edition)
   Theme: Direct-Response DTC E-Commerce
   Brand: LitterLoops
   Product: Non-Electric Self-Cleaning Cat Litter Box
@@ -27,10 +27,6 @@
 
   assign current_variant = current_product.selected_or_first_available_variant
   assign variant_id = current_variant.id | default: 1
-  assign price_display = "$149.99"
-  assign compare_price_display = "$179.99"
-  assign savings_display = "$30.00"
-  assign discount_percent = 17
 -%}
 
 <!-- Google Fonts -->
@@ -218,7 +214,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.92);
+    background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--ll-border);
@@ -294,12 +290,12 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 40px;
-    align-items: center;
+    align-items: start;
   }
 
   @media (min-width: 992px) {
     .ll-hero-grid {
-      grid-template-columns: 1.05fr 1fr;
+      grid-template-columns: 1.08fr 1fr;
       gap: 56px;
     }
   }
@@ -307,6 +303,8 @@
   /* Hero Media Gallery Showcase */
   .ll-hero-gallery {
     position: relative;
+    position: sticky;
+    top: 90px;
   }
 
   .ll-main-card {
@@ -344,7 +342,7 @@
 
   .ll-product-illustration {
     width: 100%;
-    height: 400px;
+    height: 420px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -356,19 +354,19 @@
 
   .ll-gallery-main-img {
     max-width: 100%;
-    max-height: 380px;
+    max-height: 390px;
     object-fit: contain;
     border-radius: var(--ll-radius-md);
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transition: opacity 0.22s ease, transform 0.22s ease;
   }
 
   .ll-gallery-nav-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 36px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.92);
+    width: 38px;
+    height: 38px;
+    background: rgba(255, 255, 255, 0.94);
     border: 1px solid var(--ll-border);
     border-radius: 50%;
     display: flex;
@@ -488,7 +486,7 @@
   .ll-hero-content {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 18px;
   }
 
   .ll-review-pill {
@@ -507,7 +505,7 @@
     margin-right: -4px;
   }
 
-  .ll-review-avatars img, .ll-review-avatars .ll-avatar-mini {
+  .ll-review-avatars .ll-avatar-mini {
     width: 24px;
     height: 24px;
     border-radius: 50%;
@@ -535,7 +533,7 @@
   }
 
   .ll-hero-subheadline {
-    font-size: 1.18rem;
+    font-size: 1.15rem;
     color: var(--ll-muted);
     line-height: 1.5;
   }
@@ -545,14 +543,14 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
   .ll-bullet-item {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    font-size: 1rem;
+    font-size: 0.98rem;
     font-weight: 600;
     color: var(--ll-dark-soft);
   }
@@ -570,7 +568,134 @@
     margin-top: 2px;
   }
 
-  /* Offer & Pricing Card */
+  /* CRO 2.0 BUNDLE SELECTOR TIERS */
+  .ll-bundle-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 6px;
+  }
+
+  .ll-bundle-card {
+    border: 2px solid var(--ll-border);
+    border-radius: var(--ll-radius-lg);
+    background: var(--ll-white);
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+
+  .ll-bundle-card:hover {
+    border-color: #99f6e4;
+    background: #f0fdfa;
+  }
+
+  .ll-bundle-card.active {
+    border-color: var(--ll-primary);
+    background: #f0fdfa;
+    box-shadow: 0 6px 16px rgba(13, 148, 136, 0.12);
+  }
+
+  .ll-bundle-ribbon {
+    position: absolute;
+    top: -11px;
+    right: 18px;
+    background: linear-gradient(90deg, #f59e0b, #d97706);
+    color: #ffffff;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: var(--ll-radius-full);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+  }
+
+  .ll-bundle-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ll-bundle-radio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid var(--ll-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  .ll-bundle-card.active .ll-bundle-radio {
+    border-color: var(--ll-primary);
+  }
+
+  .ll-bundle-radio::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--ll-primary);
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.2s ease;
+  }
+
+  .ll-bundle-card.active .ll-bundle-radio::after {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .ll-bundle-info h4 {
+    font-size: 1.02rem;
+    font-weight: 800;
+    color: var(--ll-dark);
+  }
+
+  .ll-bundle-info p {
+    font-size: 0.82rem;
+    color: var(--ll-muted);
+    margin-top: 2px;
+  }
+
+  .ll-bundle-pricing {
+    text-align: right;
+  }
+
+  .ll-bundle-price {
+    font-family: var(--ll-font-heading);
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: var(--ll-dark);
+  }
+
+  .ll-bundle-compare {
+    font-size: 0.88rem;
+    color: var(--ll-muted);
+    text-decoration: line-through;
+    display: block;
+  }
+
+  .ll-bundle-save-tag {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #15803d;
+    background: #dcfce7;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 2px;
+    display: inline-block;
+  }
+
+  /* Pricing & Buy Container */
   .ll-pricing-card {
     background: var(--ll-bg-light);
     border: 2px solid #ccfbf1;
@@ -578,7 +703,7 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 14px;
     position: relative;
   }
 
@@ -620,15 +745,37 @@
     border-radius: var(--ll-radius-full);
   }
 
+  /* BNPL Installment Pill */
+  .ll-installments-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--ll-dark-soft);
+    background: var(--ll-white);
+    padding: 8px 12px;
+    border-radius: var(--ll-radius-sm);
+    border: 1px solid var(--ll-border);
+  }
+
+  .ll-bnpl-badge {
+    background: #5a31f4;
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
   .ll-stock-urgency {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     font-weight: 700;
     color: var(--ll-accent-dark);
     background: var(--ll-accent-light);
-    padding: 8px 14px;
+    padding: 8px 12px;
     border-radius: var(--ll-radius-sm);
   }
 
@@ -649,13 +796,47 @@
   .ll-form-wrap {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
   .ll-btn-block {
     width: 100%;
     padding: 20px;
     font-size: 1.25rem;
+  }
+
+  /* Estimated Delivery Bar */
+  .ll-delivery-notice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #047857;
+    background: #ecfdf5;
+    padding: 8px 12px;
+    border-radius: var(--ll-radius-sm);
+    border: 1px solid #a7f3d0;
+  }
+
+  /* Payment Security Icons Bar */
+  .ll-payment-icons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding-top: 6px;
+  }
+
+  .ll-pay-badge {
+    background: #ffffff;
+    border: 1px solid var(--ll-border);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #475569;
   }
 
   /* Trust Guarantees row */
@@ -780,7 +961,49 @@
     font-size: 0.95rem;
   }
 
-  /* 5. COMPARISON TABLE */
+  /* 5. SPECIFICATIONS & DIMENSIONS SECTION */
+  .ll-specs-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  @media (min-width: 768px) {
+    .ll-specs-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .ll-spec-card {
+    background: var(--ll-white);
+    border: 1px solid var(--ll-border);
+    border-radius: var(--ll-radius-md);
+    padding: 20px;
+    text-align: center;
+    box-shadow: var(--ll-shadow-sm);
+  }
+
+  .ll-spec-value {
+    font-family: var(--ll-font-heading);
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--ll-primary);
+    margin-bottom: 4px;
+  }
+
+  .ll-spec-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--ll-dark);
+  }
+
+  .ll-spec-sub {
+    font-size: 0.78rem;
+    color: var(--ll-muted);
+    margin-top: 2px;
+  }
+
+  /* 6. COMPARISON TABLE */
   .ll-comparison-wrap {
     overflow-x: auto;
     background: var(--ll-white);
@@ -846,7 +1069,7 @@
     gap: 6px;
   }
 
-  /* 6. FEATURES & PAIN POINTS GRID */
+  /* 7. FEATURES & PAIN POINTS GRID */
   .ll-features-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -901,7 +1124,7 @@
     font-size: 0.95rem;
   }
 
-  /* 7. SOCIAL PROOF & REVIEWS */
+  /* 8. SOCIAL PROOF & REVIEWS */
   .ll-reviews-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -979,7 +1202,7 @@
     font-weight: 600;
   }
 
-  /* 8. FAQ ACCORDION */
+  /* 9. FAQ ACCORDION */
   .ll-faq-list {
     display: flex;
     flex-direction: column;
@@ -1036,7 +1259,7 @@
     display: block;
   }
 
-  /* 9. FINAL CTA SECTION */
+  /* 10. FINAL CTA SECTION */
   .ll-cta-box {
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
     border-radius: var(--ll-radius-xl);
@@ -1071,7 +1294,7 @@
     font-size: 1.15rem;
   }
 
-  /* 10. STICKY MOBILE BUY BAR */
+  /* 11. STICKY MOBILE BUY BAR */
   .ll-sticky-bar {
     position: fixed;
     bottom: 0;
@@ -1137,7 +1360,7 @@
 <div class="ll-page">
   <!-- 1. TOP ANNOUNCEMENT BAR -->
   <div class="ll-announcement-bar">
-    🔥 <strong>SPRING LAUNCH SALE:</strong> Save {{ savings_display }} OFF + Free Express Delivery & 60-Day In-Home Trial!
+    🔥 <strong>LIMITED SPRING LAUNCH:</strong> Save $30 OFF + Free Express Delivery & 60-Day In-Home Risk-Free Trial!
   </div>
 
   <!-- 2. STICKY HEADER -->
@@ -1158,8 +1381,8 @@
           <span>4.9/5 from 4,200+ Cat Parents</span>
         </div>
 
-        <a href="#order" class="ll-btn ll-btn-primary ll-btn-sm">
-          Order Now — {{ price_display }}
+        <a href="#order" class="ll-btn ll-btn-primary ll-btn-sm" id="ll-header-buy-btn">
+          Order Now — $149.99
         </a>
       </div>
     </div>
@@ -1176,8 +1399,8 @@
             <div class="ll-floating-pill">
               <span>⚡ 2026 Innovation</span>
             </div>
-            <div class="ll-floating-pill ll-floating-pill-right">
-              <span>SAVE {{ discount_percent }}%</span>
+            <div class="ll-floating-pill ll-floating-pill-right" id="ll-gallery-save-badge">
+              <span>SAVE 17%</span>
             </div>
 
             <div class="ll-product-illustration" id="ll-gallery-viewport">
@@ -1250,7 +1473,7 @@
           </div>
         </div>
 
-        <!-- Right: Direct-Response Sales Copy & Buy Box -->
+        <!-- Right: Direct-Response Sales Copy & Multi-Pack Buy Box -->
         <div class="ll-hero-content">
           
           <div class="ll-review-pill">
@@ -1285,33 +1508,109 @@
             </li>
           </ul>
 
+          <!-- CRO 2.0 MULTI-PACK BUNDLE SELECTOR -->
+          <div class="ll-bundle-wrap">
+            <div style="font-size: 0.88rem; font-weight: 800; color: var(--ll-dark); letter-spacing: 0.02em; text-transform: uppercase;">
+              Select Your Bundle Package:
+            </div>
+
+            <!-- Tier 1: Single Pack -->
+            <div class="ll-bundle-card active" data-tier="1" data-price="149.99" data-compare="179.99" data-savings="30.00" data-discount="17" data-qty="1" data-monthly="37.49">
+              <div class="ll-bundle-left">
+                <div class="ll-bundle-radio"></div>
+                <div class="ll-bundle-info">
+                  <h4>1x LitterLoops™ Starter Box</h4>
+                  <p>Standard 1-Cat Household • Free Shipping</p>
+                </div>
+              </div>
+              <div class="ll-bundle-pricing">
+                <div class="ll-bundle-price">$149.99</div>
+                <span class="ll-bundle-compare">$179.99</span>
+                <span class="ll-bundle-save-tag">SAVE $30</span>
+              </div>
+            </div>
+
+            <!-- Tier 2: 2-Pack Bundle (Most Popular) -->
+            <div class="ll-bundle-card" data-tier="2" data-price="269.99" data-compare="359.98" data-savings="90.00" data-discount="25" data-qty="2" data-monthly="67.49">
+              <div class="ll-bundle-ribbon">🔥 MOST POPULAR / BEST VALUE</div>
+              <div class="ll-bundle-left">
+                <div class="ll-bundle-radio"></div>
+                <div class="ll-bundle-info">
+                  <h4>2x LitterLoops™ Double Pack</h4>
+                  <p>Multi-Cat or 2-Story Home • Free 6-Pack Filters</p>
+                </div>
+              </div>
+              <div class="ll-bundle-pricing">
+                <div class="ll-bundle-price">$269.99</div>
+                <span class="ll-bundle-compare">$359.98</span>
+                <span class="ll-bundle-save-tag">SAVE $90 ($134.99/ea)</span>
+              </div>
+            </div>
+
+            <!-- Tier 3: 3-Pack Bundle (Family Pack) -->
+            <div class="ll-bundle-card" data-tier="3" data-price="379.99" data-compare="539.97" data-savings="160.00" data-discount="30" data-qty="3" data-monthly="94.99">
+              <div class="ll-bundle-left">
+                <div class="ll-bundle-radio"></div>
+                <div class="ll-bundle-info">
+                  <h4>3x LitterLoops™ Whole-Home Pack</h4>
+                  <p>Large Multi-Cat Homes • Free 12-Pack Filters</p>
+                </div>
+              </div>
+              <div class="ll-bundle-pricing">
+                <div class="ll-bundle-price">$379.99</div>
+                <span class="ll-bundle-compare">$539.97</span>
+                <span class="ll-bundle-save-tag">SAVE $160 ($126.66/ea)</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Pricing & Checkout Container -->
           <div class="ll-pricing-card">
             <div class="ll-pricing-header">
               <div class="ll-price-wrap">
-                <span class="ll-current-price">{{ price_display }}</span>
-                <span class="ll-compare-price">{{ compare_price_display }}</span>
-                <span class="ll-save-badge">SAVE {{ discount_percent }}% ({{ savings_display }} OFF)</span>
+                <span class="ll-current-price" id="ll-price-display">$149.99</span>
+                <span class="ll-compare-price" id="ll-compare-display">$179.99</span>
+                <span class="ll-save-badge" id="ll-save-badge">SAVE 17% ($30.00 OFF)</span>
               </div>
+            </div>
+
+            <!-- BNPL Installment breakdown -->
+            <div class="ll-installments-pill" id="ll-installments-pill">
+              <span class="ll-bnpl-badge">Shop Pay</span>
+              <span>or 4 interest-free payments of <strong id="ll-monthly-price">$37.49</strong> with Klarna or Shop Pay</span>
             </div>
 
             <div class="ll-stock-urgency">
               <span class="ll-stock-dot"></span>
-              <span>Limited Spring Batch: Only 19 units remaining at this price</span>
+              <span>Limited Batch: Only 14 units remaining in current shipping cycle</span>
+            </div>
+
+            <div class="ll-delivery-notice">
+              <span>🚚</span>
+              <span><strong>Guaranteed Delivery:</strong> Ships in 24h • Arrives in 2–4 Business Days</span>
             </div>
 
             <form action="/cart/add" method="post" enctype="multipart/form-data" id="ll-direct-checkout-form" class="ll-form-wrap">
               <input type="hidden" name="id" id="ll-variant-id" value="{{ variant_id | default: 1 }}">
-              <input type="hidden" name="quantity" value="1">
+              <input type="hidden" name="quantity" id="ll-selected-qty" value="1">
 
               <button type="submit" class="ll-btn ll-btn-primary ll-btn-block ll-btn-pulse" id="ll-checkout-btn">
-                <span>CLAIM YOUR LITTERLOOPS — {{ price_display }}</span>
+                <span id="ll-btn-text">CLAIM YOUR LITTERLOOPS — $149.99</span>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
               </button>
             </form>
+
+            <div class="ll-payment-icons">
+              <span class="ll-pay-badge">🔒 256-Bit SSL</span>
+              <span class="ll-pay-badge">Apple Pay</span>
+              <span class="ll-pay-badge">Google Pay</span>
+              <span class="ll-pay-badge">Visa</span>
+              <span class="ll-pay-badge">Mastercard</span>
+              <span class="ll-pay-badge">PayPal</span>
+            </div>
 
             <div class="ll-trust-row">
               <div class="ll-trust-item">
@@ -1375,8 +1674,42 @@
     </div>
   </section>
 
-  <!-- 5. COMPARISON TABLE -->
+  <!-- 5. PRODUCT SPECIFICATIONS & DIMENSIONS -->
   <section class="ll-section">
+    <div class="ll-container">
+      <div class="ll-section-header">
+        <span class="ll-section-tag">Precision Engineering</span>
+        <h2 class="ll-h2">Built for Comfort & Extreme Longevity</h2>
+        <p class="ll-section-subtitle">Spacious interior dimensions designed for small kittens up to 18.5 lb adult cats.</p>
+      </div>
+
+      <div class="ll-specs-grid">
+        <div class="ll-spec-card">
+          <div class="ll-spec-value">18.5 lbs</div>
+          <div class="ll-spec-label">Max Cat Weight</div>
+          <div class="ll-spec-sub">Fits 99% of cat breeds</div>
+        </div>
+        <div class="ll-spec-card">
+          <div class="ll-spec-value">6–8 Days</div>
+          <div class="ll-spec-label">Waste Drawer Capacity</div>
+          <div class="ll-spec-sub">Empty only once weekly</div>
+        </div>
+        <div class="ll-spec-card">
+          <div class="ll-spec-value">21.5" × 20"</div>
+          <div class="ll-spec-label">Compact Footprint</div>
+          <div class="ll-spec-sub">Fits tight apartments easily</div>
+        </div>
+        <div class="ll-spec-card">
+          <div class="ll-spec-value">100% BPA-Free</div>
+          <div class="ll-spec-label">Antibacterial ABS</div>
+          <div class="ll-spec-sub">Waterproof & easy rinse</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. COMPARISON TABLE -->
+  <section class="ll-section ll-section-alt">
     <div class="ll-container">
       <div class="ll-section-header">
         <span class="ll-section-tag">Honest Comparison</span>
@@ -1397,7 +1730,7 @@
           <tbody>
             <tr>
               <td class="ll-feature-title">Retail Price</td>
-              <td class="ll-col-highlight"><strong>{{ price_display }} (One-Time)</strong></td>
+              <td class="ll-col-highlight"><strong>$149.99 (One-Time)</strong></td>
               <td>$499 – $799 + subscription</td>
               <td>$20 – $40</td>
             </tr>
@@ -1437,8 +1770,8 @@
     </div>
   </section>
 
-  <!-- 6. FEATURES GRID & BENEFITS -->
-  <section class="ll-section ll-section-alt">
+  <!-- 7. FEATURES GRID & BENEFITS -->
+  <section class="ll-section">
     <div class="ll-container">
       <div class="ll-section-header">
         <span class="ll-section-tag">Engineered for Perfection</span>
@@ -1488,8 +1821,8 @@
     </div>
   </section>
 
-  <!-- 7. REVIEWS & SOCIAL PROOF -->
-  <section class="ll-section">
+  <!-- 8. REVIEWS & SOCIAL PROOF -->
+  <section class="ll-section ll-section-alt">
     <div class="ll-container">
       <div class="ll-section-header">
         <span class="ll-section-tag">Verified Cat Parents</span>
@@ -1559,8 +1892,8 @@
     </div>
   </section>
 
-  <!-- 8. INTERACTIVE FAQ -->
-  <section class="ll-section ll-section-alt">
+  <!-- 9. INTERACTIVE FAQ -->
+  <section class="ll-section">
     <div class="ll-container-narrow">
       <div class="ll-section-header">
         <span class="ll-section-tag">Got Questions?</span>
@@ -1585,7 +1918,7 @@
             <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
           </div>
           <div class="ll-faq-answer">
-            Yes! The spacious internal globe comfortably accommodates cats from 4 lbs up to 18 lbs (including large breeds like Ragdolls and Maine Coons).
+            Yes! The spacious internal globe comfortably accommodates cats from 4 lbs up to 18.5 lbs (including large breeds like Ragdolls and Maine Coons).
           </div>
         </div>
 
@@ -1613,8 +1946,8 @@
     </div>
   </section>
 
-  <!-- 9. FINAL URGENCY OFFER CTA -->
-  <section class="ll-section">
+  <!-- 10. FINAL URGENCY OFFER CTA -->
+  <section class="ll-section ll-section-alt">
     <div class="ll-container">
       <div class="ll-cta-box">
         <span class="ll-badge ll-badge-amber" style="margin-bottom: 16px;">🔥 Limited Spring Sale</span>
@@ -1622,13 +1955,13 @@
         <p>Join 4,200+ satisfied cat parents who simplified their daily routine. Get LitterLoops today at our lowest launch price ever.</p>
         
         <div style="display:inline-block; margin-bottom: 24px;">
-          <span style="font-size: 2.5rem; font-weight: 900; font-family: var(--ll-font-heading);">{{ price_display }}</span>
-          <span style="font-size: 1.3rem; color: #94a3b8; text-decoration: line-through; margin-left: 10px;">{{ compare_price_display }}</span>
+          <span style="font-size: 2.5rem; font-weight: 900; font-family: var(--ll-font-heading);">$149.99</span>
+          <span style="font-size: 1.3rem; color: #94a3b8; text-decoration: line-through; margin-left: 10px;">$179.99</span>
         </div>
 
         <div>
           <a href="#order" class="ll-btn ll-btn-primary ll-btn-pulse" style="padding: 20px 48px; font-size: 1.25rem;">
-            CLAIM YOUR {{ savings_display }} DISCOUNT NOW
+            CLAIM YOUR $30.00 DISCOUNT NOW
           </a>
         </div>
 
@@ -1639,13 +1972,13 @@
     </div>
   </section>
 
-  <!-- 10. STICKY MOBILE ADD-TO-CART BAR -->
+  <!-- 11. STICKY MOBILE ADD-TO-CART BAR -->
   <div class="ll-sticky-bar" id="ll-sticky-mobile-bar">
     <div class="ll-sticky-left">
       <div class="ll-sticky-thumb">🐱</div>
       <div>
-        <div class="ll-sticky-title">LitterLoops™</div>
-        <div class="ll-sticky-price">{{ price_display }} <span style="font-size:0.75rem; color:#94a3b8; text-decoration:line-through;">{{ compare_price_display }}</span></div>
+        <div class="ll-sticky-title" id="ll-sticky-title">1x LitterLoops™</div>
+        <div class="ll-sticky-price" id="ll-sticky-price">$149.99 <span style="font-size:0.75rem; color:#94a3b8; text-decoration:line-through;" id="ll-sticky-compare">$179.99</span></div>
       </div>
     </div>
     <a href="#order" class="ll-btn ll-btn-primary ll-btn-sm" id="ll-sticky-buy-btn">
@@ -1697,7 +2030,6 @@
         counter.textContent = `${currentIndex + 1} / ${thumbBtns.length}`;
       }
 
-      // Scroll thumbnail into view smoothly if needed
       targetBtn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
     }
 
@@ -1719,7 +2051,48 @@
       });
     }
 
-    // 1. FAQ Accordion Toggle
+    // 1. CRO 2.0 BUNDLE SELECTOR TIER SWITCHER
+    const bundleCards = document.querySelectorAll('.ll-bundle-card');
+    const priceDisplay = document.getElementById('ll-price-display');
+    const compareDisplay = document.getElementById('ll-compare-display');
+    const saveBadge = document.getElementById('ll-save-badge');
+    const btnText = document.getElementById('ll-btn-text');
+    const headerBtn = document.getElementById('ll-header-buy-btn');
+    const monthlyPrice = document.getElementById('ll-monthly-price');
+    const selectedQtyInput = document.getElementById('ll-selected-qty');
+    const stickyTitle = document.getElementById('ll-sticky-title');
+    const stickyPrice = document.getElementById('ll-sticky-price');
+    const gallerySaveBadge = document.getElementById('ll-gallery-save-badge');
+
+    bundleCards.forEach(card => {
+      card.addEventListener('click', function() {
+        bundleCards.forEach(c => c.classList.remove('active'));
+        this.classList.add('active');
+
+        const tier = this.getAttribute('data-tier');
+        const price = this.getAttribute('data-price');
+        const compare = this.getAttribute('data-compare');
+        const savings = this.getAttribute('data-savings');
+        const discount = this.getAttribute('data-discount');
+        const qty = this.getAttribute('data-qty');
+        const monthly = this.getAttribute('data-monthly');
+
+        if (priceDisplay) priceDisplay.textContent = `$${price}`;
+        if (compareDisplay) compareDisplay.textContent = `$${compare}`;
+        if (saveBadge) saveBadge.textContent = `SAVE ${discount}% ($${savings} OFF)`;
+        if (gallerySaveBadge) gallerySaveBadge.innerHTML = `<span>SAVE ${discount}%</span>`;
+        if (monthlyPrice) monthlyPrice.textContent = `$${monthly}`;
+        if (selectedQtyInput) selectedQtyInput.value = qty;
+
+        const packLabel = tier === '1' ? '1x LITTERLOOPS' : `${tier}x LITTERLOOPS PACK`;
+        if (btnText) btnText.textContent = `CLAIM ${packLabel} — $${price}`;
+        if (headerBtn) headerBtn.textContent = `Order Now — $${price}`;
+        if (stickyTitle) stickyTitle.textContent = `${tier}x LitterLoops™`;
+        if (stickyPrice) stickyPrice.innerHTML = `$${price} <span style="font-size:0.75rem; color:#94a3b8; text-decoration:line-through;">$${compare}</span>`;
+      });
+    });
+
+    // 2. FAQ Accordion Toggle
     const faqItems = document.querySelectorAll('.ll-faq-item');
     faqItems.forEach(item => {
       const question = item.querySelector('.ll-faq-question');
@@ -1730,7 +2103,7 @@
       });
     });
 
-    // 2. Sticky Mobile Buy Bar Visibility on Scroll
+    // 3. Sticky Mobile Buy Bar Visibility on Scroll
     const stickyBar = document.getElementById('ll-sticky-mobile-bar');
     const heroSection = document.getElementById('order');
 
@@ -1744,7 +2117,7 @@
       }
     });
 
-    // 3. Fast 1-Click Checkout Handler
+    // 4. Fast 1-Click Checkout Handler
     const checkoutForm = document.getElementById('ll-direct-checkout-form');
     if (checkoutForm) {
       checkoutForm.addEventListener('submit', function(e) {
@@ -1757,6 +2130,7 @@
         }
 
         const variantId = document.getElementById('ll-variant-id').value;
+        const qty = parseInt(document.getElementById('ll-selected-qty').value || '1', 10);
 
         // Fast AJAX sequence to clear cart and add single product, then redirect to checkout
         fetch('/cart/clear.js', { method: 'POST' })
@@ -1764,7 +2138,7 @@
             return fetch('/cart/add.js', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: variantId, quantity: 1 })
+              body: JSON.stringify({ id: variantId, quantity: qty })
             });
           })
           .then(res => res.json())
@@ -1773,7 +2147,6 @@
           })
           .catch(err => {
             console.error('Checkout error:', err);
-            // Fallback regular submit
             window.location.href = '/checkout';
           });
       });
