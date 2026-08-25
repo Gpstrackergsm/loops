@@ -521,9 +521,9 @@ iframe.ll-video {
           <a href="#vs-robot">vs. Litter Robot</a>
           <a href="#offer">Get Yours</a>
         </nav>
-        <a href="#offer" class="btn btn-primary" style="padding:10px 22px;font-size:.88rem;">
+        <button type="button" class="btn btn-primary ll-direct-checkout" style="padding:10px 22px;font-size:.88rem;">
           Get LitterLoops™ — $99.99
-        </a>
+        </button>
       </div>
     </div>
   </header>
@@ -805,7 +805,9 @@ iframe.ll-video {
           <p>LitterLoops™ uses a simple rotating design to help separate clumped waste from reusable clean litter — the same proven rotating sieve principle that has existed for decades, now in a refined, everyday design.</p>
           <p>Instead of digging through the litter box daily, you rotate the unit once, let the internal sieve separate waste from clean granules, slide out the collection drawer, and continue using the clean litter.</p>
           <p>No sensors. No firmware. No motor to maintain. No subscription. Just a reliable mechanical process you control.</p>
-          <a href="#offer" class="btn btn-primary" style="width:fit-content;">Get LitterLoops™ — $99.99</a>
+          <button type="button" class="btn btn-primary ll-direct-checkout" style="width:fit-content;">
+            Get LitterLoops™ — $99.99
+          </button>
         </div>
       </div>
     </div>
@@ -1364,9 +1366,9 @@ iframe.ll-video {
         <span class="ll-kicker">Ready?</span>
         <h2>Ready To Spend Less Time Scooping?</h2>
         <p>Make your cat's litter routine simpler with LitterLoops™.</p>
-        <a href="#offer" class="btn btn-primary btn-lg">
-          Get LitterLoops™ — $99.99
-        </a>
+        <button type="button" class="btn btn-primary btn-lg ll-direct-checkout">
+          Order LitterLoops™ — $99.99
+        </button>
       </div>
     </div>
   </section>
@@ -1384,32 +1386,69 @@ iframe.ll-video {
       <span class="ll-sticky-name">LitterLoops™</span>
       <span class="ll-sticky-price">$99.99 <span style="font-size:.82rem;color:var(--subtle);font-weight:600;text-decoration:line-through;">$149.99</span></span>
     </div>
-    <a href="#offer" class="btn btn-primary" style="padding:11px 22px;font-size:.9rem;">
+    <button type="button" class="btn btn-primary ll-direct-checkout" style="padding:11px 22px;font-size:.9rem;">
       Get LitterLoops™
-    </a>
+    </button>
   </div>
 
 </div><!-- /ll -->
 
 <script>
 (function(){
-  /* ── Checkout forms ── */
-  var vid = document.getElementById('ll-vid');
-  function bindForm(fid, bid){
-    var f = document.getElementById(fid), b = document.getElementById(bid);
-    if(!f||!b) return;
-    f.addEventListener('submit', function(e){
+  /* ── Universal Direct-to-Checkout ── */
+  var fallbackVariantId = {{ vid | default: 54675654803795 }};
+  var isRedirecting = false;
+
+  function directToCheckout(btn) {
+    if (isRedirecting) return;
+    isRedirecting = true;
+
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Redirecting to checkout…';
+    }
+    document.querySelectorAll('.ll-direct-checkout, #ll-hero-btn, #ll-offer-btn').forEach(function(b) {
+      b.disabled = true;
+      b.textContent = 'Redirecting to checkout…';
+    });
+
+    var idEl = document.getElementById('ll-vid');
+    var variantId = (idEl && idEl.value && parseInt(idEl.value) > 0) ? parseInt(idEl.value) : fallbackVariantId;
+
+    fetch('/cart/clear.js', { method: 'POST' })
+      .then(function() {
+        return fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: variantId, quantity: 1 })
+        });
+      })
+      .then(function() {
+        window.location.href = '/checkout';
+      })
+      .catch(function(err) {
+        console.error('Checkout error:', err);
+        window.location.href = '/checkout';
+      });
+  }
+
+  document.querySelectorAll('.ll-direct-checkout').forEach(function(button) {
+    button.addEventListener('click', function(e) {
       e.preventDefault();
-      b.disabled = true; b.textContent = 'One moment…';
-      var id = vid ? vid.value : 0;
-      fetch('/cart/clear.js',{method:'POST'})
-        .then(function(){ return fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:id,quantity:1})}); })
-        .then(function(){ window.location.href='/checkout'; })
-        .catch(function(){ window.location.href='/checkout'; });
+      directToCheckout(button);
+    });
+  });
+
+  function bindForm(fid, bid) {
+    var f = document.getElementById(fid), b = document.getElementById(bid);
+    if (!f) return;
+    f.addEventListener('submit', function(e) {
+      e.preventDefault();
+      directToCheckout(b);
     });
   }
-  bindForm('ll-hero-form','ll-hero-btn');
-  bindForm('ll-offer-form','ll-offer-btn');
+  bindForm('ll-hero-form', 'll-hero-btn');
+  bindForm('ll-offer-form', 'll-offer-btn');
 
   /* ── Gallery & Video Switcher ── */
   var videoWrap = document.getElementById('ll-video-wrap');
