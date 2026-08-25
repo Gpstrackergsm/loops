@@ -398,6 +398,51 @@ a { text-decoration: none; }
 .ll-sticky-info { display: flex; flex-direction: column; }
 .ll-sticky-name { font-family: var(--fh); font-size: .86rem; font-weight: 800; color: var(--ink); }
 .ll-sticky-price { font-family: var(--fh); font-size: 1.1rem; font-weight: 900; color: var(--brand); }
+
+/* ─── VIDEO PLAYER ───────────────────────────── */
+.ll-video-wrap {
+  position: relative;
+  border-radius: var(--r3);
+  overflow: hidden;
+  background: #000;
+  aspect-ratio: 16/9;
+  width: 100%;
+}
+.ll-video {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  border: none;
+}
+/* For iframe embeds keep aspect ratio */
+iframe.ll-video {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+.ll-video-controls {
+  position: absolute; bottom: 12px; right: 12px;
+  display: flex; gap: 8px; z-index: 10;
+}
+.ll-vid-mute, .ll-vid-pause {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(15,25,35,.55); backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,.18);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #fff; transition: background .15s;
+}
+.ll-vid-mute:hover, .ll-vid-pause:hover { background: rgba(10,124,113,.75); }
+
+/* Video thumbnail badge in thumbs row */
+.ll-thumb-vid { position: relative; }
+.ll-thumb-vid-inner { position: relative; width: 100%; height: 100%; }
+.ll-thumb-vid-inner img { width: 100%; height: 100%; object-fit: cover; }
+.ll-play-ico {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0,0,0,.35);
+  color: #fff; font-size: .75rem;
+  border-radius: 4px;
+}
 </style>
 
 <div class="ll">
@@ -432,13 +477,97 @@ a { text-decoration: none; }
     <div class="ll-w">
       <div class="ll-hero-grid">
 
-        <!-- GALLERY -->
+        <!-- MEDIA: VIDEO FIRST, IMAGES SECONDARY -->
+        {%- liquid
+          assign hero_video = nil
+          assign hero_ext_video = nil
+          for m in cp.media
+            if m.media_type == 'video' and hero_video == nil
+              assign hero_video = m
+            endif
+            if m.media_type == 'external_video' and hero_ext_video == nil
+              assign hero_ext_video = m
+            endif
+          endfor
+          assign has_video = false
+          if hero_video != nil or hero_ext_video != nil
+            assign has_video = true
+          endif
+        -%}
+
         <div class="ll-gallery">
-          <div class="ll-gallery-vp" id="ll-vp">
+
+          {%- comment %} ── VIDEO PLAYER (shown when video exists) ── {% endcomment -%}
+          {%- if has_video -%}
+            <div class="ll-video-wrap" id="ll-video-wrap">
+
+              {%- if hero_video != nil -%}
+                {%- comment %} Shopify-hosted video -%}
+                <video
+                  id="ll-product-video"
+                  class="ll-video"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  poster="{{ cp.featured_image | img_url: '900x900' }}"
+                  preload="auto"
+                >
+                  {%- for source in hero_video.sources -%}
+                    {%- if source.mime_type == 'video/mp4' -%}
+                      <source src="{{ source.url }}" type="video/mp4">
+                    {%- endif -%}
+                  {%- endfor -%}
+                  {%- for source in hero_video.sources -%}
+                    {%- unless source.mime_type == 'video/mp4' -%}
+                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                    {%- endunless -%}
+                  {%- endfor -%}
+                </video>
+                <div class="ll-video-controls">
+                  <button class="ll-vid-mute" id="ll-vid-mute" aria-label="Toggle mute">
+                    <svg id="ll-icon-mute" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 0 19 12v-2m-9.06 8.72A7 7 0 0 1 5 12v-2"/></svg>
+                    <svg id="ll-icon-sound" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                  </button>
+                  <button class="ll-vid-pause" id="ll-vid-pause" aria-label="Play/Pause">
+                    <svg id="ll-icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                    <svg id="ll-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  </button>
+                </div>
+
+              {%- elsif hero_ext_video != nil -%}
+                {%- comment %} YouTube / Vimeo embed -%}
+                {%- if hero_ext_video.host == 'youtube' -%}
+                  <iframe
+                    class="ll-video"
+                    src="https://www.youtube.com/embed/{{ hero_ext_video.external_id }}?autoplay=1&mute=1&loop=1&playlist={{ hero_ext_video.external_id }}&controls=1&rel=0&modestbranding=1"
+                    title="{{ cp.title | escape }}"
+                    frameborder="0"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                {%- elsif hero_ext_video.host == 'vimeo' -%}
+                  <iframe
+                    class="ll-video"
+                    src="https://player.vimeo.com/video/{{ hero_ext_video.external_id }}?autoplay=1&muted=1&loop=1"
+                    title="{{ cp.title | escape }}"
+                    frameborder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                {%- endif -%}
+              {%- endif -%}
+
+            </div><!-- /ll-video-wrap -->
+          {%- endif -%}
+
+          {%- comment %} ── IMAGE GALLERY (always shown; hidden in hero if video is present) ── {% endcomment -%}
+          <div class="ll-gallery-vp {% if has_video %}ll-gallery-secondary{% endif %}" id="ll-vp"
+               {%- if has_video %} style="display:none"{% endif -%}>
             {%- if cp.images.size > 0 -%}
               <img id="ll-main-img"
                 src="{{ cp.featured_image | img_url: '900x900' }}"
-                alt="{{ cp.title | escape }}" loading="eager" width="900" height="900">
+                alt="{{ cp.title | escape }}" loading="{% if has_video %}lazy{% else %}eager{% endif %}" width="900" height="900">
               {%- if cp.images.size > 1 -%}
                 <button class="gal-btn p" id="ll-prev" aria-label="Previous">
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
@@ -453,8 +582,6 @@ a { text-decoration: none; }
                   <circle cx="80" cy="80" r="70" fill="#edfaf7" stroke="#b2f0e8" stroke-width="2.5"/>
                   <circle cx="80" cy="80" r="52" fill="none" stroke="#0d9488" stroke-width="3.5" stroke-dasharray="9 6" stroke-linecap="round"/>
                   <path d="M54 90 Q80 106 106 90" stroke="#0d9488" stroke-width="4" stroke-linecap="round" fill="none"/>
-                  <path d="M116 56 A 54 54 0 0 1 130 84" stroke="#d97706" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-                  <polygon points="130,80 134,91 124,88" fill="#d97706"/>
                   <circle cx="80" cy="68" r="14" fill="#0a7c71" opacity=".9"/>
                 </svg>
                 <p>Product images appear once your Shopify catalog is connected</p>
@@ -462,17 +589,28 @@ a { text-decoration: none; }
             {%- endif -%}
           </div>
 
-          {%- if cp.images.size > 1 -%}
+          {%- comment %} Thumbnail row — shows video thumb + image thumbs -%}
+          {%- if cp.media.size > 1 or cp.images.size > 1 -%}
             <div class="ll-thumbs" id="ll-thumbs">
+              {%- if has_video -%}
+                <div class="ll-thumb ll-thumb-vid on" data-type="video" data-idx="v"
+                     role="button" tabindex="0" aria-label="Play video">
+                  <div class="ll-thumb-vid-inner">
+                    <img src="{{ cp.featured_image | img_url: '140x140', crop: 'center' }}" alt="Video thumbnail" loading="lazy">
+                    <span class="ll-play-ico">▶</span>
+                  </div>
+                </div>
+              {%- endif -%}
               {%- for img in cp.images -%}
-                <div class="ll-thumb {% if forloop.first %}on{% endif %}"
-                     data-src="{{ img | img_url: '900x900' }}" data-idx="{{ forloop.index0 }}"
+                <div class="ll-thumb {% unless has_video %}{% if forloop.first %}on{% endif %}{% endunless %}"
+                     data-src="{{ img | img_url: '900x900' }}" data-idx="{{ forloop.index0 }}" data-type="image"
                      role="button" tabindex="0" aria-label="View image {{ forloop.index }}">
                   <img src="{{ img | img_url: '140x140', crop: 'center' }}" alt="{{ img.alt | escape }}" loading="lazy">
                 </div>
               {%- endfor -%}
             </div>
           {%- endif -%}
+
         </div>
 
         <!-- HERO COPY -->
@@ -1135,25 +1273,98 @@ a { text-decoration: none; }
   bindForm('ll-hero-form','ll-hero-btn');
   bindForm('ll-offer-form','ll-offer-btn');
 
-  /* ── Gallery ── */
-  var mainImg = document.getElementById('ll-main-img');
-  var thumbs  = Array.from(document.querySelectorAll('.ll-thumb'));
-  var idx     = 0;
-  function goTo(n){
-    if(!thumbs.length||!mainImg) return;
-    idx = (n+thumbs.length)%thumbs.length;
-    mainImg.style.opacity='0.3';
-    setTimeout(function(){ mainImg.src = thumbs[idx].dataset.src; mainImg.style.opacity='1'; }, 150);
+  /* ── Gallery & Video Switcher ── */
+  var videoWrap = document.getElementById('ll-video-wrap');
+  var galleryVp = document.getElementById('ll-vp');
+  var mainImg   = document.getElementById('ll-main-img');
+  var thumbs    = Array.from(document.querySelectorAll('.ll-thumb'));
+  var vidElem   = document.getElementById('ll-product-video');
+  var muteBtn   = document.getElementById('ll-vid-mute');
+  var pauseBtn  = document.getElementById('ll-vid-pause');
+  var iconMute  = document.getElementById('ll-icon-mute');
+  var iconSound = document.getElementById('ll-icon-sound');
+  var iconPause = document.getElementById('ll-icon-pause');
+  var iconPlay  = document.getElementById('ll-icon-play');
+  var imgThumbs = thumbs.filter(function(t){ return t.dataset.type === 'image'; });
+  var idx       = 0;
+
+  function showVideoView(){
+    if (videoWrap) videoWrap.style.display = 'block';
+    if (galleryVp) galleryVp.style.display = 'none';
+    if (vidElem) { vidElem.play(); }
     thumbs.forEach(function(t){ t.classList.remove('on'); });
-    thumbs[idx].classList.add('on');
+    var vidThumb = document.querySelector('.ll-thumb-vid');
+    if (vidThumb) vidThumb.classList.add('on');
   }
+
+  function showImageView(imageIndex){
+    if (videoWrap) {
+      videoWrap.style.display = 'none';
+      if (vidElem) { vidElem.pause(); }
+    }
+    if (galleryVp) galleryVp.style.display = 'flex';
+    if (imgThumbs.length && mainImg) {
+      idx = (imageIndex + imgThumbs.length) % imgThumbs.length;
+      mainImg.style.opacity = '0.3';
+      setTimeout(function(){
+        mainImg.src = imgThumbs[idx].dataset.src;
+        mainImg.style.opacity = '1';
+      }, 150);
+      thumbs.forEach(function(t){ t.classList.remove('on'); });
+      imgThumbs[idx].classList.add('on');
+    }
+  }
+
   thumbs.forEach(function(t){
-    t.addEventListener('click', function(){ goTo(parseInt(t.dataset.idx)); });
-    t.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' ') goTo(parseInt(t.dataset.idx)); });
+    t.addEventListener('click', function(){
+      if (t.dataset.type === 'video') {
+        showVideoView();
+      } else {
+        var imageIdx = imgThumbs.indexOf(t);
+        showImageView(imageIdx >= 0 ? imageIdx : 0);
+      }
+    });
+    t.addEventListener('keydown', function(e){
+      if(e.key==='Enter'||e.key===' '){
+        e.preventDefault();
+        t.click();
+      }
+    });
   });
+
   var p = document.getElementById('ll-prev'), n = document.getElementById('ll-next');
-  if(p) p.addEventListener('click', function(){ goTo(idx-1); });
-  if(n) n.addEventListener('click', function(){ goTo(idx+1); });
+  if(p) p.addEventListener('click', function(){ showImageView(idx - 1); });
+  if(n) n.addEventListener('click', function(){ showImageView(idx + 1); });
+
+  // Video controls
+  if (muteBtn && vidElem) {
+    muteBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      vidElem.muted = !vidElem.muted;
+      if (vidElem.muted) {
+        if(iconMute) iconMute.style.display = 'none';
+        if(iconSound) iconSound.style.display = 'block';
+      } else {
+        if(iconMute) iconMute.style.display = 'block';
+        if(iconSound) iconSound.style.display = 'none';
+      }
+    });
+  }
+
+  if (pauseBtn && vidElem) {
+    pauseBtn.addEventListener('click', function(e){
+      e.preventDefault();
+      if (vidElem.paused) {
+        vidElem.play();
+        if(iconPause) iconPause.style.display = 'block';
+        if(iconPlay) iconPlay.style.display = 'none';
+      } else {
+        vidElem.pause();
+        if(iconPause) iconPause.style.display = 'none';
+        if(iconPlay) iconPlay.style.display = 'block';
+      }
+    });
+  }
 
   /* ── Accordions (objections + FAQ) ── */
   function initAcc(sel){
