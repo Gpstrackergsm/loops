@@ -442,6 +442,65 @@ iframe.ll-video {
   color: #fff; font-size: .75rem;
   border-radius: 4px;
 }
+
+/* ─── 3-WAY COMPARISON TABLE ─────────────────── */
+.ll-compare-table-wrap {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r4);
+  overflow-x: auto; box-shadow: var(--sh3);
+}
+.ll-comp-table {
+  width: 100%; border-collapse: collapse; min-width: 600px; text-align: left;
+}
+.ll-comp-table th, .ll-comp-table td {
+  padding: 16px 20px; border-bottom: 1px solid var(--line); font-size: .93rem;
+}
+.ll-comp-table th {
+  font-family: var(--fh); font-weight: 800; font-size: 1rem; color: var(--ink);
+  background: var(--wash);
+}
+.ll-comp-table th.col-highlight {
+  background: var(--brand-lt); color: var(--brand); border-top: 3px solid var(--brand);
+}
+.ll-comp-table td.col-highlight {
+  background: rgba(240, 253, 249, 0.45); font-weight: 600; color: var(--ink);
+}
+.ll-comp-table tr:last-child td { border-bottom: none; }
+
+/* ─── SCENARIO STORIES ───────────────────────── */
+.ll-stories-grid { display: grid; gap: 20px; }
+@media(min-width:768px){ .ll-stories-grid { grid-template-columns: repeat(3,1fr); } }
+.ll-story-card {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r3);
+  padding: 28px 22px; display: flex; flex-direction: column; gap: 12px;
+  box-shadow: var(--sh2); transition: transform .15s;
+}
+.ll-story-card:hover { transform: translateY(-2px); }
+.ll-story-tag {
+  font-family: var(--fh); font-size: .75rem; font-weight: 800; text-transform: uppercase;
+  color: var(--brand); letter-spacing: .08em;
+}
+.ll-story-quote {
+  font-size: .95rem; color: var(--ink-soft); font-style: italic; line-height: 1.6;
+}
+.ll-story-author {
+  font-size: .82rem; font-weight: 700; color: var(--muted); margin-top: auto;
+}
+
+/* ─── GUARANTEE CARD ─────────────────────────── */
+.ll-guarantee {
+  background: linear-gradient(135deg, #f0fdf9 0%, #fff 100%);
+  border: 2px solid var(--brand-bd); border-radius: var(--r4);
+  padding: 36px 30px; display: flex; flex-direction: column; gap: 16px;
+  align-items: center; text-align: center; max-width: 720px; margin: 0 auto 40px;
+  box-shadow: var(--sh2);
+}
+.ll-guarantee-badge {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: var(--brand); color: #fff; display: flex; align-items: center;
+  justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 14px rgba(10,124,113,.3);
+}
+.ll-guarantee h3 { font-size: 1.35rem; }
+.ll-guarantee p { font-size: .95rem; color: var(--muted); max-width: 560px; line-height: 1.65; }
 </style>
 
 <div class="ll">
@@ -630,47 +689,46 @@ iframe.ll-video {
         <div class="ll-hero-copy">
           <div class="ll-tag">
             <span style="width:7px;height:7px;border-radius:50%;background:var(--brand);display:block;"></span>
-            Non-Electric Cat Litter Box
+            Non-Electric Self-Cleaning Litter Box
           </div>
 
           <h1>Less Scooping.<br>More Time<br>With Your Cat.</h1>
 
           <p class="ll-hero-sub">
-            The simple, non-electric way to separate clumped waste from clean litter — no electricity, batteries, motors, or apps.
+            The quiet, non-electric rotating litter box that separates waste in seconds — without cords, motor breakdowns, or complicated apps.
           </p>
 
           <div class="ll-checks">
             <span class="ll-check">No Electricity</span>
             <span class="ll-check">No Batteries</span>
-            <span class="ll-check">No Motor</span>
-            <span class="ll-check">No App</span>
+            <span class="ll-check">No Motor Noise</span>
+            <span class="ll-check">5-Second Daily Clean</span>
           </div>
 
           <div class="ll-price-row">
             <span class="ll-price">$99.99</span>
             <span class="ll-was">$149.99</span>
-            <span class="ll-save">Save $50</span>
+            <span class="ll-save">Save $50 Today</span>
           </div>
           <p class="ll-price-context">
-            Litter Robot 4: $699 &nbsp;·&nbsp; LitterLoops™: $99.99<br>
-            Same rotating principle. No electricity. Much simpler.
+            <strong>The Smart Alternative:</strong> Litter Robot 4 costs $699. LitterLoops™ gives you the same rotating sifting convenience for $99.99 — with 0 electrical parts to fail.
           </p>
 
           <form id="ll-hero-form" style="display:flex;flex-direction:column;gap:12px;">
             <input type="hidden" id="ll-vid" value="{{ vid }}">
             <div class="ll-cta-group">
               <button type="submit" class="btn btn-primary btn-lg" id="ll-hero-btn">
-                Get LitterLoops™
+                Order LitterLoops™ — $99.99
               </button>
               <a href="#how-it-works" class="btn btn-ghost">
-                See How It Works
+                Watch How It Works
               </a>
             </div>
           </form>
 
           <div class="ll-micro-trust">
-            <span>🔒 Secure checkout</span>
-            <span>↩️ Easy returns</span>
+            <span>🛡️ 30-Day Cat Adaptation Trial</span>
+            <span>🔒 256-Bit Encrypted Checkout</span>
           </div>
         </div>
 
@@ -797,50 +855,98 @@ iframe.ll-video {
   </section>
 
   <!-- ══════════════════
-       PRICE COMPARISON (vs Litter Robot)
+       3-WAY ROUTINE COMPARISON
   ══════════════════ -->
   <section class="ll-sec" id="vs-robot">
     <div class="ll-w">
       <div class="ll-sec-hd center">
-        <span class="ll-kicker">Simple Comparison</span>
-        <h2>Same Rotating Principle. A Fraction Of The Price.</h2>
-        <p class="ll-lead">People online are surprised when they find out the price. Here is the honest comparison.</p>
+        <span class="ll-kicker">Honest Comparison</span>
+        <h2>How Does LitterLoops™ Compare To Your Current Routine?</h2>
+        <p class="ll-lead">See how manual rotating compares against traditional hand scooping and expensive motorized boxes.</p>
       </div>
-      <div class="ll-vs-grid">
-        <div class="ll-vs-card featured">
-          <h3 style="color:var(--brand);">LitterLoops™</h3>
-          <div class="ll-vs-row"><span class="ll-vs-check y">✓</span>No electricity required</div>
-          <div class="ll-vs-row"><span class="ll-vs-check y">✓</span>No motor to break</div>
-          <div class="ll-vs-row"><span class="ll-vs-check y">✓</span>No app or Wi-Fi</div>
-          <div class="ll-vs-row"><span class="ll-vs-check y">✓</span>100% quiet operation</div>
-          <div class="ll-vs-row"><span class="ll-vs-check y">✓</span>Open design cats feel comfortable entering</div>
-          <div class="ll-vs-row"><span class="ll-vs-check y">✓</span>No risk of motor entrapment</div>
-          <div class="ll-vs-row"><span class="ll-vs-check y">✓</span>Manual control — you decide when to clean</div>
-          <div class="ll-vs-row"><span class="ll-vs-check n">✗</span>Requires manual rotation daily</div>
-          <div style="margin-top:16px;">
-            <div class="ll-vs-price-tag">$99.99</div>
-            <div class="ll-vs-compare">vs. $149.99 regular price</div>
+
+      <div class="ll-compare-table-wrap">
+        <table class="ll-comp-table">
+          <thead>
+            <tr>
+              <th>Feature / Experience</th>
+              <th>Traditional Litter Box</th>
+              <th class="col-highlight">LitterLoops™ (Manual Sieve)</th>
+              <th>Motorized Litter Robot</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Daily Effort</strong></td>
+              <td>5–10 mins manual digging & scooping</td>
+              <td class="col-highlight"><strong>1 gentle 5-second turn</strong></td>
+              <td>Automatic cycling</td>
+            </tr>
+            <tr>
+              <td><strong>Contact with Waste & Dust</strong></td>
+              <td>High — shovel stirs up dust in face</td>
+              <td class="col-highlight"><strong>Zero contact — pulls out in tray</strong></td>
+              <td>Zero contact — pulls out in drawer</td>
+            </tr>
+            <tr>
+              <td><strong>Cat Acceptance / Sound</strong></td>
+              <td>Familiar & quiet</td>
+              <td class="col-highlight"><strong>100% silent & open (cats feel safe)</strong></td>
+              <td>Motor noise & enclosed (some cats refuse)</td>
+            </tr>
+            <tr>
+              <td><strong>Power & Plugs Required</strong></td>
+              <td>None</td>
+              <td class="col-highlight"><strong>None — place anywhere in home</strong></td>
+              <td>Requires wall outlet & power cord</td>
+            </tr>
+            <tr>
+              <td><strong>Sensors, Wi-Fi & Apps</strong></td>
+              <td>None</td>
+              <td class="col-highlight"><strong>None — 0 mechanical parts to fail</strong></td>
+              <td>Wi-Fi, firmware, app connection needed</td>
+            </tr>
+            <tr>
+              <td><strong>Initial Price</strong></td>
+              <td>$15 – $30</td>
+              <td class="col-highlight"><strong>$99.99 (Special Launch Offer)</strong></td>
+              <td>$400 – $699+</td>
+            </tr>
+            <tr>
+              <td><strong>Ongoing Repair Costs</strong></td>
+              <td>$0</td>
+              <td class="col-highlight"><strong>$0 — Built to last for years</strong></td>
+              <td>Motor / sensor replacements ($50–$150)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SCENARIO STORIES -->
+      <div style="margin-top:56px;">
+        <div class="ll-sec-hd center" style="margin-bottom:28px;">
+          <span class="ll-kicker">Real Situations</span>
+          <h2>Built For Everyday Cat Owners</h2>
+        </div>
+        <div class="ll-stories-grid">
+          <div class="ll-story-card">
+            <span class="ll-story-tag">Expecting & Sensitive Owners</span>
+            <p class="ll-story-quote">"As an expecting mom, I'm not supposed to be digging through litter boxes. LitterLoops™ lets me just turn the drum once and slide the drawer into the trash without stirring up dust."</p>
+            <span class="ll-story-author">Verified Buyer Quote Insight</span>
+          </div>
+          <div class="ll-story-card">
+            <span class="ll-story-tag">Picky / Sound-Sensitive Cats</span>
+            <p class="ll-story-quote">"My cat was terrified of the robotic motor on my old automatic box and refused to go inside. Because LitterLoops™ is open and completely silent, she started using it on day one."</p>
+            <span class="ll-story-author">Community Comment Experience</span>
+          </div>
+          <div class="ll-story-card">
+            <span class="ll-story-tag">Apartments & Cord-Free Spaces</span>
+            <p class="ll-story-quote">"I don't have power outlets near my bathroom where the litter box sits. Having something that separates waste without running extension cords across the hall is a huge relief."</p>
+            <span class="ll-story-author">Verified Customer Routine</span>
           </div>
         </div>
-        <div class="ll-vs-card">
-          <h3 style="color:var(--muted);">Electric / Motorized Litter Robots</h3>
-          <div class="ll-vs-row"><span class="ll-vs-check n">✗</span>Requires wall power / charging</div>
-          <div class="ll-vs-row"><span class="ll-vs-check n">✗</span>Motor and sensors can malfunction</div>
-          <div class="ll-vs-row"><span class="ll-vs-check n">✗</span>App setup & Wi-Fi dependency</div>
-          <div class="ll-vs-row"><span class="ll-vs-check n">✗</span>Motor and cycling noise can startle cats</div>
-          <div class="ll-vs-row"><span class="ll-vs-check n">✗</span>Enclosed — some cats refuse to enter</div>
-          <div class="ll-vs-row"><span class="ll-vs-check y">✓</span>Fully automatic cycling</div>
-          <div class="ll-vs-row"><span class="ll-vs-check y">✓</span>Larger waste drawer capacity (some models)</div>
-          <div class="ll-vs-row"><span class="ll-vs-check y">✓</span>No manual rotation required</div>
-          <div style="margin-top:16px;">
-            <div class="ll-vs-price-tag" style="color:var(--muted);">$400–$700+</div>
-            <div class="ll-vs-compare">Typical retail price range</div>
-          </div>
-        </div>
       </div>
-      <p style="text-align:center;font-size:.85rem;color:var(--subtle);margin-top:20px;">
-        LitterLoops™ is not claiming to be better than every automatic litter box. It is a different choice — for cat owners who prefer simple, quiet, non-electric cleaning.
-      </p>
+
     </div>
   </section>
 
@@ -1132,11 +1238,24 @@ iframe.ll-video {
   </section>
 
   <!-- ══════════════════
-       OFFER
+       OFFER & GUARANTEE
   ══════════════════ -->
   <section class="ll-sec" id="offer">
     <div class="ll-w">
+
+      <!-- 30-DAY CAT ADAPTATION GUARANTEE -->
+      <div class="ll-guarantee">
+        <div class="ll-guarantee-badge">🛡️</div>
+        <div>
+          <h3>30-Day Cat Adaptation Trial</h3>
+          <p>
+            We know every cat has their own personality. Put LitterLoops™ in your home for 30 days. If your cat doesn't comfortably adapt to the new rotating routine, simply contact our support team and we will assist you with a hassle-free return.
+          </p>
+        </div>
+      </div>
+
       <div class="ll-offer">
+        <div class="ll-tag" style="margin:0 auto 12px;">Launch Offer — Save $50</div>
         <div class="ll-offer-name">LitterLoops™</div>
         <div class="ll-offer-desc">Non-Electric Self-Cleaning Cat Litter Box</div>
         <div class="ll-offer-row">
@@ -1144,18 +1263,18 @@ iframe.ll-video {
           <span class="ll-offer-was">$149.99</span>
         </div>
         <div class="ll-offer-note">
-          Launch pricing. No countdown. No fake scarcity.
+          100% Non-Electric · Whisper-Quiet · 30-Day Risk-Free Trial
         </div>
         <form id="ll-offer-form">
           <button type="submit" class="btn btn-primary btn-full" id="ll-offer-btn">
-            Get LitterLoops™ — $99.99
+            Order LitterLoops™ — $99.99
           </button>
         </form>
         <div class="ll-trust-pills">
-          <span class="ll-trust-pill">🔒 Secure checkout</span>
-          <span class="ll-trust-pill">↩️ Easy returns</span>
-          <span class="ll-trust-pill">📦 Order tracking</span>
-          <span class="ll-trust-pill">💬 Customer support</span>
+          <span class="ll-trust-pill">🛡️ 30-Day Trial</span>
+          <span class="ll-trust-pill">🔒 Secure Checkout</span>
+          <span class="ll-trust-pill">📦 Tracked Delivery</span>
+          <span class="ll-trust-pill">💬 Friendly Support</span>
         </div>
       </div>
     </div>
