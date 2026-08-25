@@ -1,9 +1,9 @@
 [
   {
     "name": "theme_info",
-    "theme_name": "LitterLoops High-Converting DTC Theme",
+    "theme_name": "LitterLoops",
     "theme_version": "1.0.0",
-    "theme_author": "Shopify Senior Theme Architect",
+    "theme_author": "LitterLoops",
     "theme_documentation_url": "https://github.com/Gpstrackergsm/loops",
     "theme_support_url": "https://github.com/Gpstrackergsm/loops"
   },
@@ -13,7 +13,7 @@
       {
         "type": "video_url",
         "id": "hero_video_url",
-        "label": "Hero Product Video URL (YouTube / Vimeo)",
+        "label": "Hero Product Video URL",
         "accept": ["youtube", "vimeo"],
         "info": "Paste a YouTube or Vimeo link if you want to feature an external video in the hero."
       },
