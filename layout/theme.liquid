@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="theme-color" content="#0d9488">
-    <meta name="theme-version" content="2.2.0-video">
     <link rel="canonical" href="{{ canonical_url }}">
     <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 
@@ -43,84 +42,5 @@
     <main id="MainContent" role="main" tabindex="-1">
       {{ content_for_layout }}
     </main>
-
-    <script>
-      (function(){
-        var videoUrl = "https://cdn.shopify.com/videos/c/o/v/d4417c219a0843ad8e797e10e15a6e25.mp4";
-        function injectHeroVideo() {
-          var galleryContainer = document.querySelector('.ll-gallery');
-          if (!galleryContainer) return;
-          var existingVideo = galleryContainer.querySelector('video');
-          if (existingVideo) return;
-          
-          var galleryVp = document.getElementById('ll-vp') || galleryContainer.querySelector('.ll-gallery-vp');
-          
-          var videoWrap = document.createElement('div');
-          videoWrap.id = 'll-video-wrap';
-          videoWrap.className = 'll-video-wrap';
-          videoWrap.style.cssText = 'position:relative;border-radius:18px;overflow:hidden;background:#000;aspect-ratio:16/9;width:100%;margin-bottom:12px;';
-          
-          var video = document.createElement('video');
-          video.id = 'll-product-video';
-          video.className = 'll-video';
-          video.autoplay = true;
-          video.muted = true;
-          video.loop = true;
-          video.setAttribute('playsinline', '');
-          video.setAttribute('preload', 'auto');
-          video.src = videoUrl;
-          video.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
-          
-          videoWrap.appendChild(video);
-          
-          if (galleryVp) {
-            galleryVp.style.display = 'none';
-            galleryContainer.insertBefore(videoWrap, galleryVp);
-          } else {
-            galleryContainer.insertBefore(videoWrap, galleryContainer.firstChild);
-          }
-          
-          var thumbs = document.getElementById('ll-thumbs') || galleryContainer.querySelector('.ll-thumbs');
-          if (thumbs) {
-            var vidThumb = document.createElement('div');
-            vidThumb.className = 'll-thumb ll-thumb-vid on';
-            vidThumb.setAttribute('role', 'button');
-            vidThumb.style.cssText = 'position:relative;width:62px;height:62px;border-radius:6px;overflow:hidden;cursor:pointer;flex-shrink:0;border:2px solid #0a7c71;margin-right:8px;';
-            var mainImg = document.getElementById('ll-main-img');
-            var posterSrc = mainImg ? mainImg.src : '';
-            vidThumb.innerHTML = '<div style="position:relative;width:100%;height:100%;"><img src="' + posterSrc + '" style="width:100%;height:100%;object-fit:cover;"><span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.4);color:#fff;font-size:14px;font-weight:bold;">▶</span></div>';
-            
-            vidThumb.addEventListener('click', function(){
-              videoWrap.style.display = 'block';
-              if (galleryVp) galleryVp.style.display = 'none';
-              video.play();
-              thumbs.querySelectorAll('.ll-thumb').forEach(function(t){ t.classList.remove('on'); t.style.borderColor = 'transparent'; });
-              vidThumb.classList.add('on');
-              vidThumb.style.borderColor = '#0a7c71';
-            });
-            
-            thumbs.insertBefore(vidThumb, thumbs.firstChild);
-            
-            thumbs.querySelectorAll('.ll-thumb:not(.ll-thumb-vid)').forEach(function(imgThumb){
-              imgThumb.addEventListener('click', function(){
-                videoWrap.style.display = 'none';
-                video.pause();
-                if (galleryVp) galleryVp.style.display = 'flex';
-                vidThumb.classList.remove('on');
-                vidThumb.style.borderColor = 'transparent';
-              });
-            });
-          }
-          
-          video.play().catch(function(){});
-        }
-        
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', injectHeroVideo);
-        } else {
-          injectHeroVideo();
-        }
-      })();
-    </script>
   </body>
 </html>
