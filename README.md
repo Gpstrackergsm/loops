@@ -1,30 +1,45 @@
-# 🐱 LitterLoops™ — High-Converting Single-Product Shopify Landing Page
+# 🐱 LitterLoops™ — Official Product Shopify Theme
 
-> **Product**: LitterLoops™ Non-Electric Self-Cleaning Cat Litter Box  
-> **Tagline**: *Turn. Separate. Empty. Done.*  
-> **Sale Price**: $149.99 (Regular Price: $179.99 - Save $30)
+> **Brand**: LitterLoops™  
+> **Product**: Non-Electric Self-Cleaning Cat Litter Box  
+> **Positioning**: *A smarter, simpler way to clean your cat's litter box — without electricity.*  
+> **Pricing**: $99.99 (Compare-at: $149.99)
 
 ---
 
 ## 🚀 Overview
 
-**LitterLoops** is a DTC physical e-commerce theme architecture designed to maximize conversion rates for single-product direct-response funnels.
+**LitterLoops™** is a custom single-product Shopify landing page engineered for honest conversion, trust-building, and clear objection handling.
 
-### Key Architecture Features
-* **100% Native Liquid & Zero External Dependencies**: Blazing fast load times with Google Fonts (`Outfit` & `Plus Jakarta Sans`).
-* **Instant 1-Click Checkout Flow**: High-performance AJAX cart sequence (`/cart/clear.js` -> `/cart/add.js` -> `/checkout`) sending customers straight to conversion without cart page drop-offs.
-* **Mobile-First Conversion Stack**: Includes sticky bottom buy bar appearing on scroll with active discount pricing and instant buy button.
-* **Direct-Response Sections**:
-  1. Top Urgency Announcement Bar
-  2. Sticky Glassmorphism Header with Live Social Proof
-  3. Two-Column Hero Direct-Response Showcase with 47% OFF Badge & Real-Time Stock Urgency
-  4. 3-Step Visual Breakdown ("Turn. Separate. Empty. Done.")
-  5. Honest Comparison Table (LitterLoops vs. $500+ Electric Robotic Boxes vs. Manual Litter Pans)
-  6. 6-Feature Problem/Solution Benefit Grid
-  7. Verified Buyer Reviews with Avatars & Ratings
-  8. Objections-Crushing Interactive FAQ Accordion
-  9. High-Impact Closing Offer CTA
-  10. Sticky Mobile Add-to-Cart Bar
+### Key Content & Architectural Sections:
+1. **Main Hero**:
+   - Headline: *"Less Scooping. More Time With Your Cat."*
+   - Subheadline: *"LitterLoops™ uses a simple rotating design to separate clumped waste from clean litter — without electricity, batteries, motors, or complicated electronics."*
+   - Clear price block ($99.99 / $149.99) & dual action CTAs (*"Get LitterLoops™"* & *"See How It Works"*).
+   - High-quality interactive multi-image product gallery.
+2. **The Problem ("Still Scooping Every Day?")**:
+   - 3 clear pain points: digging through dirty litter, wasting clean litter, dealing with messy clumps.
+3. **How It Works (3-Step Visual Breakdown)**:
+   - 01 — ROTATE: Turn LitterLoops™ using the simple rotating mechanism.
+   - 02 — SEPARATE: Sieve catches clumped waste while clean litter filters back.
+   - 03 — REMOVE: Slide out waste drawer and discard.
+4. **Why Non-Electric? ("Smart Doesn't Have To Mean Complicated.")**:
+   - Honest comparison against motorized litter robots.
+5. **Customer Objections Addressed ("Questions Cat Owners Are Already Asking")**:
+   - Transparent, realistic answers to wet litter, bottom sticking, odor control, cat sizing, stability, litter compatibility, and scooping frequency.
+6. **Core Benefits Grid**:
+   - Clean iconography covering less daily scooping, zero electricity, quiet operation, simple mechanical design, less mess, and litter reuse.
+7. **For People Who Don't Want A Robot ("Not Every Cat Loves A Robot.")**:
+   - Highlighting the open, familiar, non-threatening litter pan experience for sound-sensitive cats.
+8. **Product Specifications Table**:
+   - Clear dimensions, weight, cat size limit, litter types, material, and cleaning procedure.
+9. **What's In The Box**:
+   - Accurate breakdown of all packaged components.
+10. **The Offer Card**:
+    - Clean $99.99 launch pricing with 1-click checkout.
+11. **Comprehensive 13-Question FAQ**:
+    - Detailed answers answering every technical, shipping, and usage question.
+12. **Final Closing CTA & Sticky Mobile Buy Bar**.
 
 ---
 
@@ -33,28 +48,22 @@
 ```
 loops/
 ├── layout/
-│   └── theme.liquid                 # Minimal root layout
+│   └── theme.liquid                      # Clean root layout with favicon support
 ├── templates/
-│   ├── product.litterloops.liquid   # Single-product direct-response template
-│   └── page.litterloops.liquid      # Standalone landing page template
+│   ├── index.liquid                      # Home page template
+│   ├── product.liquid                    # Default product template
+│   ├── product.litterloops.liquid        # Product alternate template
+│   ├── page.liquid                       # Default page template
+│   ├── page.litterloops.liquid           # Standalone page template
+│   ├── cart.liquid                       # 1-click cart redirect
+│   ├── collection.liquid                 # Collection template
+│   └── 404.liquid                        # 404 fallback template
 ├── snippets/
-│   └── litterloops-landing-page.liquid # Self-contained modular landing page engine
+│   └── litterloops-landing-page.liquid   # Complete, self-contained landing page engine
+├── assets/
+│   └── favicon.svg                       # Branded SVG Favicon
 ├── config/
-│   └── settings_schema.json         # Shopify Theme metadata schema
+│   ├── settings_schema.json              # Customizer schema
+│   └── settings_data.json                # Customizer defaults
 └── README.md
 ```
-
----
-
-## 🛠️ Installation & Setup on Shopify
-
-### Method 1: Connect via Shopify GitHub Integration (Recommended)
-1. In your **Shopify Admin**, navigate to **Online Store > Themes**.
-2. Click **Add theme > Connect from GitHub**.
-3. Select the repository `Gpstrackergsm/loops` and branch `main`.
-4. Shopify will automatically sync with this GitHub repo whenever changes are pushed.
-
-### Method 2: Use in an Existing Shopify Theme
-1. Copy `snippets/litterloops-landing-page.liquid` into your existing theme's `snippets/` directory.
-2. Copy `templates/product.litterloops.liquid` to your `templates/` directory.
-3. In Shopify Admin, open your product (**LitterLoops**) and in the **Theme template** dropdown on the bottom-right, select `litterloops`.
