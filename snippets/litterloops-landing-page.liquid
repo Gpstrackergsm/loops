@@ -484,82 +484,94 @@ iframe.ll-video {
           for m in cp.media
             if m.media_type == 'video' and hero_video == nil
               assign hero_video = m
-            endif
-            if m.media_type == 'external_video' and hero_ext_video == nil
+            elsif m.media_type == 'external_video' and hero_ext_video == nil
               assign hero_ext_video = m
             endif
           endfor
+
+          assign custom_mp4 = settings.hero_mp4_url
+          assign custom_video_url = settings.hero_video_url
+
           assign has_video = false
-          if hero_video != nil or hero_ext_video != nil
+          if hero_video != nil or hero_ext_video != nil or custom_mp4 != blank or custom_video_url != blank
             assign has_video = true
           endif
         -%}
 
-        <div class="ll-gallery">
+        <div class="ll-gallery" id="ll-gallery-container" data-product-handle="{{ cp.handle | escape }}">
 
           {%- comment %} ── VIDEO PLAYER (shown when video exists) ── {% endcomment -%}
-          {%- if has_video -%}
-            <div class="ll-video-wrap" id="ll-video-wrap">
+          <div class="ll-video-wrap" id="ll-video-wrap" {%- unless has_video %} style="display:none"{% endunless -%}>
 
-              {%- if hero_video != nil -%}
-                {%- comment %} Shopify-hosted video -%}
-                <video
-                  id="ll-product-video"
+            {%- if custom_mp4 != blank -%}
+              <video
+                id="ll-product-video"
+                class="ll-video"
+                autoplay
+                muted
+                loop
+                playsinline
+                poster="{{ cp.featured_image | img_url: '900x900' }}"
+                preload="auto"
+                src="{{ custom_mp4 }}"
+              >
+              </video>
+            {%- elsif custom_video_url != blank -%}
+              {%- if custom_video_url.type == 'youtube' -%}
+                <iframe
                   class="ll-video"
-                  autoplay
-                  muted
-                  loop
-                  playsinline
-                  poster="{{ cp.featured_image | img_url: '900x900' }}"
-                  preload="auto"
-                >
-                  {%- for source in hero_video.sources -%}
-                    {%- if source.mime_type == 'video/mp4' -%}
-                      <source src="{{ source.url }}" type="video/mp4">
-                    {%- endif -%}
-                  {%- endfor -%}
-                  {%- for source in hero_video.sources -%}
-                    {%- unless source.mime_type == 'video/mp4' -%}
-                      <source src="{{ source.url }}" type="{{ source.mime_type }}">
-                    {%- endunless -%}
-                  {%- endfor -%}
-                </video>
-                <div class="ll-video-controls">
-                  <button class="ll-vid-mute" id="ll-vid-mute" aria-label="Toggle mute">
-                    <svg id="ll-icon-mute" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 0 19 12v-2m-9.06 8.72A7 7 0 0 1 5 12v-2"/></svg>
-                    <svg id="ll-icon-sound" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-                  </button>
-                  <button class="ll-vid-pause" id="ll-vid-pause" aria-label="Play/Pause">
-                    <svg id="ll-icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                    <svg id="ll-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                  </button>
-                </div>
-
-              {%- elsif hero_ext_video != nil -%}
-                {%- comment %} YouTube / Vimeo embed -%}
-                {%- if hero_ext_video.host == 'youtube' -%}
-                  <iframe
-                    class="ll-video"
-                    src="https://www.youtube.com/embed/{{ hero_ext_video.external_id }}?autoplay=1&mute=1&loop=1&playlist={{ hero_ext_video.external_id }}&controls=1&rel=0&modestbranding=1"
-                    title="{{ cp.title | escape }}"
-                    frameborder="0"
-                    allow="autoplay; encrypted-media; picture-in-picture"
-                    allowfullscreen
-                  ></iframe>
-                {%- elsif hero_ext_video.host == 'vimeo' -%}
-                  <iframe
-                    class="ll-video"
-                    src="https://player.vimeo.com/video/{{ hero_ext_video.external_id }}?autoplay=1&muted=1&loop=1"
-                    title="{{ cp.title | escape }}"
-                    frameborder="0"
-                    allow="autoplay; fullscreen; picture-in-picture"
-                    allowfullscreen
-                  ></iframe>
-                {%- endif -%}
+                  src="https://www.youtube.com/embed/{{ custom_video_url.id }}?autoplay=1&mute=1&loop=1&playlist={{ custom_video_url.id }}&controls=1&rel=0&modestbranding=1"
+                  title="{{ cp.title | escape }}"
+                  frameborder="0"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              {%- elsif custom_video_url.type == 'vimeo' -%}
+                <iframe
+                  class="ll-video"
+                  src="https://player.vimeo.com/video/{{ custom_video_url.id }}?autoplay=1&muted=1&loop=1"
+                  title="{{ cp.title | escape }}"
+                  frameborder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
               {%- endif -%}
+            {%- elsif hero_video != nil -%}
+              {{ hero_video | video_tag: autoplay: true, loop: true, muted: true, playsinline: true, controls: false, class: 'll-video', id: 'll-product-video', poster: cp.featured_image | img_url: '900x900' }}
+            {%- elsif hero_ext_video != nil -%}
+              {%- if hero_ext_video.host == 'youtube' -%}
+                <iframe
+                  class="ll-video"
+                  src="https://www.youtube.com/embed/{{ hero_ext_video.external_id }}?autoplay=1&mute=1&loop=1&playlist={{ hero_ext_video.external_id }}&controls=1&rel=0&modestbranding=1"
+                  title="{{ cp.title | escape }}"
+                  frameborder="0"
+                  allow="autoplay; encrypted-media; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              {%- elsif hero_ext_video.host == 'vimeo' -%}
+                <iframe
+                  class="ll-video"
+                  src="https://player.vimeo.com/video/{{ hero_ext_video.external_id }}?autoplay=1&muted=1&loop=1"
+                  title="{{ cp.title | escape }}"
+                  frameborder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              {%- endif -%}
+            {%- endif -%}
 
-            </div><!-- /ll-video-wrap -->
-          {%- endif -%}
+            <div class="ll-video-controls" id="ll-video-controls">
+              <button class="ll-vid-mute" id="ll-vid-mute" aria-label="Toggle mute">
+                <svg id="ll-icon-mute" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none"><line x1="1" y1="1" x2="23" y2="23"/><path d="M9 9v3a3 3 0 0 0 5.12 2.12M15 9.34V4a3 3 0 0 0-5.94-.6"/><path d="M17 16.95A7 7 0 0 0 19 12v-2m-9.06 8.72A7 7 0 0 1 5 12v-2"/></svg>
+                <svg id="ll-icon-sound" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </button>
+              <button class="ll-vid-pause" id="ll-vid-pause" aria-label="Play/Pause">
+                <svg id="ll-icon-pause" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                <svg id="ll-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:none"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </button>
+            </div>
+
+          </div><!-- /ll-video-wrap -->
 
           {%- comment %} ── IMAGE GALLERY (always shown; hidden in hero if video is present) ── {% endcomment -%}
           <div class="ll-gallery-vp {% if has_video %}ll-gallery-secondary{% endif %}" id="ll-vp"
@@ -1407,14 +1419,67 @@ iframe.ll-video {
     },{passive:true});
   }
 
-  /* ── Smooth scroll ── */
-  document.querySelectorAll('a[href^="#"]').forEach(function(a){
-    a.addEventListener('click', function(e){
-      var id = a.getAttribute('href');
-      if(id==='#') return;
-      var el = document.querySelector(id);
-      if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); }
-    });
-  });
+  /* ── Dynamic Client-Side Video Auto-Discovery ── */
+  function autoDiscoverVideo() {
+    if (vidElem || (videoWrap && videoWrap.querySelector('video, iframe'))) {
+      return; // Video already rendered by server
+    }
+    var container = document.getElementById('ll-gallery-container');
+    var handle = container ? container.getAttribute('data-product-handle') : '';
+    var candidates = [
+      handle ? '/products/' + handle + '.js' : null,
+      '/products/litterloops-non-electric-self-cleaning-cat-litter-box.js',
+      '/products/litterloops.js',
+      '/collections/all/products.json'
+    ].filter(Boolean);
+
+    function tryFetch(urls) {
+      if (!urls.length) return;
+      var url = urls.shift();
+      fetch(url)
+        .then(function(res){ return res.json(); })
+        .then(function(data){
+          var mediaList = data.media || (data.products && data.products[0] && data.products[0].media);
+          if (!mediaList && data.images && data.images.length) {
+            // Check if any media in data
+          }
+          if (mediaList && mediaList.length) {
+            var foundVid = mediaList.find(function(m){ return m.media_type === 'video' || m.media_type === 'external_video'; });
+            if (foundVid && videoWrap) {
+              if (foundVid.media_type === 'video' && foundVid.sources && foundVid.sources.length) {
+                var mp4Source = foundVid.sources.find(function(s){ return s.format === 'mp4' || s.mime_type === 'video/mp4'; }) || foundVid.sources[0];
+                var v = document.createElement('video');
+                v.id = 'll-product-video';
+                v.className = 'll-video';
+                v.autoplay = true;
+                v.muted = true;
+                v.loop = true;
+                v.setAttribute('playsinline', '');
+                v.setAttribute('preload', 'auto');
+                v.src = mp4Source.url;
+                videoWrap.insertBefore(v, videoWrap.firstChild);
+                vidElem = v;
+                showVideoView();
+              } else if (foundVid.media_type === 'external_video') {
+                var iframe = document.createElement('iframe');
+                iframe.className = 'll-video';
+                iframe.src = 'https://www.youtube.com/embed/' + foundVid.external_id + '?autoplay=1&mute=1&loop=1&playlist=' + foundVid.external_id;
+                iframe.setAttribute('allow', 'autoplay; encrypted-media');
+                iframe.setAttribute('allowfullscreen', '');
+                videoWrap.insertBefore(iframe, videoWrap.firstChild);
+                showVideoView();
+              }
+            }
+          } else {
+            tryFetch(urls);
+          }
+        })
+        .catch(function(){
+          tryFetch(urls);
+        });
+    }
+    tryFetch(candidates);
+  }
+  autoDiscoverVideo();
 })();
 </script>

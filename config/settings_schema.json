@@ -8,6 +8,24 @@
     "theme_support_url": "https://github.com/Gpstrackergsm/loops"
   },
   {
+    "name": "Hero Video",
+    "settings": [
+      {
+        "type": "video_url",
+        "id": "hero_video_url",
+        "label": "Hero Product Video URL (YouTube / Vimeo)",
+        "accept": ["youtube", "vimeo"],
+        "info": "Paste a YouTube or Vimeo link if you want to feature an external video in the hero."
+      },
+      {
+        "type": "text",
+        "id": "hero_mp4_url",
+        "label": "Direct MP4 Video URL",
+        "info": "Upload your .mp4 in Shopify Admin > Content > Files and paste the link here for instant playback."
+      }
+    ]
+  },
+  {
     "name": "Favicon & Branding",
     "settings": [
       {
