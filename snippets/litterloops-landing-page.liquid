@@ -1,1223 +1,648 @@
 {% comment %}
-  =============================================================================
-  LitterLoops™ — Official Product Landing Page
-  Positioning: Premium, Honest, Non-Electric Cat Care Design
-  =============================================================================
+  LitterLoops™ Landing Page — Premium Pet Brand Edition
+  Conversion Order: Product → How It Works → Why Different → Benefits → Objections → Specs → Price → FAQ → CTA
 {% endcomment %}
 
 {%- liquid
   assign current_product = product
-  if current_product == nil
-    if all_products['litterloops-non-electric-self-cleaning-cat-litter-box'] != blank
-      assign current_product = all_products['litterloops-non-electric-self-cleaning-cat-litter-box']
-    elsif all_products['litterloops™-non-electric-self-cleaning-cat-litter-box'] != blank
-      assign current_product = all_products['litterloops™-non-electric-self-cleaning-cat-litter-box']
-    elsif all_products['litterloops'] != blank
-      assign current_product = all_products['litterloops']
-    elsif collections.frontpage.products.first != blank
-      assign current_product = collections.frontpage.products.first
-    elsif collections['home-page'].products.first != blank
-      assign current_product = collections['home-page'].products.first
-    elsif collections.all.products.first != blank
-      assign current_product = collections.all.products.first
-    endif
+  if current_product == nil or current_product == blank
+    assign current_product = all_products['litterloops-non-electric-self-cleaning-cat-litter-box']
   endif
-
+  if current_product == nil or current_product == blank
+    assign current_product = all_products['litterloops']
+  endif
+  if current_product == nil or current_product == blank
+    assign current_product = collections.frontpage.products.first
+  endif
+  if current_product == nil or current_product == blank
+    assign current_product = collections.all.products.first
+  endif
   assign current_variant = current_product.selected_or_first_available_variant
-  assign variant_id = current_variant.id | default: 1
-  assign price_display = "$99.99"
-  assign compare_price_display = "$149.99"
-  assign savings_display = "$50.00"
+  assign variant_id = current_variant.id | default: 0
 -%}
 
-<!-- Typography -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-  :root {
-    --ll-font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --ll-font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    
-    /* Clean Premium Pet Brand Palette */
-    --ll-primary: #0d9488;
-    --ll-primary-hover: #0f766e;
-    --ll-primary-light: #f0fdfa;
-    --ll-primary-border: #ccfbf1;
-    
-    --ll-dark: #0f172a;
-    --ll-dark-soft: #1e293b;
-    --ll-text-body: #334155;
-    --ll-muted: #64748b;
-    --ll-border: #e2e8f0;
-    --ll-border-subtle: #f1f5f9;
-    
-    --ll-bg-pure: #ffffff;
-    --ll-bg-surface: #f8fafc;
-    --ll-bg-warm: #f1f5f9;
-    
-    --ll-success: #059669;
-    --ll-accent: #d97706;
-    --ll-accent-bg: #fef3c7;
-    
-    --ll-shadow-subtle: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
-    --ll-shadow-card: 0 4px 12px -2px rgba(15, 23, 42, 0.05), 0 2px 4px -2px rgba(15, 23, 42, 0.03);
-    --ll-shadow-elevated: 0 20px 30px -10px rgba(15, 23, 42, 0.08);
-    
-    --ll-radius-sm: 8px;
-    --ll-radius-md: 12px;
-    --ll-radius-lg: 18px;
-    --ll-radius-xl: 24px;
-    --ll-radius-full: 9999px;
-  }
-
-  /* Reset & Baseline */
-  .ll-page * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  .ll-page {
-    font-family: var(--ll-font-body);
-    color: var(--ll-text-body);
-    background-color: var(--ll-bg-pure);
-    line-height: 1.6;
-    font-size: 16px;
-    overflow-x: hidden;
-  }
-
-  .ll-container {
-    max-width: 1160px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
-  .ll-container-narrow {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
-  /* Typography */
-  .ll-h1, .ll-h2, .ll-h3, .ll-h4 {
-    font-family: var(--ll-font-heading);
-    color: var(--ll-dark);
-    font-weight: 700;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
-  }
-
-  .ll-h1 { font-size: clamp(2.3rem, 4.2vw, 3.4rem); letter-spacing: -0.03em; }
-  .ll-h2 { font-size: clamp(1.8rem, 3.2vw, 2.5rem); }
-  .ll-h3 { font-size: clamp(1.2rem, 1.8vw, 1.45rem); font-weight: 700; }
-  .ll-h4 { font-size: 1.1rem; font-weight: 600; }
-
-  /* Buttons */
-  .ll-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    font-family: var(--ll-font-heading);
-    font-weight: 600;
-    font-size: 1.05rem;
-    padding: 16px 32px;
-    border-radius: var(--ll-radius-full);
-    border: 1px solid transparent;
-    cursor: pointer;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  }
-
-  .ll-btn-primary {
-    background-color: var(--ll-primary);
-    color: #ffffff;
-    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.25);
-  }
-
-  .ll-btn-primary:hover {
-    background-color: var(--ll-primary-hover);
-    box-shadow: 0 6px 20px rgba(13, 148, 136, 0.32);
-    transform: translateY(-1px);
-  }
-
-  .ll-btn-secondary {
-    background-color: var(--ll-bg-surface);
-    color: var(--ll-dark);
-    border-color: var(--ll-border);
-  }
-
-  .ll-btn-secondary:hover {
-    background-color: #ffffff;
-    border-color: var(--ll-primary);
-    color: var(--ll-primary);
-  }
-
-  .ll-btn-block {
-    width: 100%;
-    padding: 18px;
-    font-size: 1.15rem;
-  }
-
-  .ll-btn-sm {
-    padding: 10px 22px;
-    font-size: 0.95rem;
-  }
-
-  .ll-pill-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    padding: 6px 14px;
-    border-radius: var(--ll-radius-full);
-    background: var(--ll-bg-surface);
-    color: var(--ll-dark-soft);
-    border: 1px solid var(--ll-border);
-  }
-
-  /* Header */
-  .ll-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--ll-border);
-  }
-
-  .ll-header-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 0;
-  }
-
-  .ll-brand {
-    font-family: var(--ll-font-heading);
-    font-size: 1.45rem;
-    font-weight: 800;
-    color: var(--ll-dark);
-    text-decoration: none;
-    letter-spacing: -0.03em;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .ll-brand span {
-    color: var(--ll-primary);
-  }
-
-  .ll-header-nav {
-    display: none;
-    align-items: center;
-    gap: 24px;
-  }
-
-  .ll-header-nav a {
-    color: var(--ll-muted);
-    font-weight: 500;
-    font-size: 0.95rem;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .ll-header-nav a:hover {
-    color: var(--ll-primary);
-  }
-
-  @media (min-width: 768px) {
-    .ll-header-nav {
-      display: flex;
-    }
-  }
-
-  /* Section Styling */
-  .ll-section {
-    padding: 72px 0;
-  }
-
-  .ll-section-alt {
-    background-color: var(--ll-bg-surface);
-  }
-
-  .ll-section-header {
-    text-align: center;
-    max-width: 680px;
-    margin: 0 auto 48px;
-  }
-
-  .ll-section-kicker {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--ll-primary);
-    margin-bottom: 8px;
-  }
-
-  .ll-section-subtitle {
-    font-size: 1.1rem;
-    color: var(--ll-muted);
-    margin-top: 12px;
-  }
-
-  /* SECTION 1: HERO */
-  .ll-hero {
-    padding: 48px 0 64px;
-    background: radial-gradient(circle at top right, rgba(204, 251, 241, 0.4) 0%, rgba(255, 255, 255, 1) 60%);
-  }
-
-  .ll-hero-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 40px;
-    align-items: center;
-  }
-
-  @media (min-width: 992px) {
-    .ll-hero-grid {
-      grid-template-columns: 1.1fr 1fr;
-      gap: 56px;
-    }
-  }
-
-  /* Hero Gallery */
-  .ll-gallery-card {
-    background: var(--ll-bg-pure);
-    border: 1px solid var(--ll-border);
-    border-radius: var(--ll-radius-xl);
-    padding: 20px;
-    box-shadow: var(--ll-shadow-card);
-  }
-
-  .ll-gallery-viewport {
-    width: 100%;
-    height: 420px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle, #f0fdfa 0%, #f8fafc 100%);
-    border-radius: var(--ll-radius-lg);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .ll-gallery-main-img {
-    max-width: 100%;
-    max-height: 390px;
-    object-fit: contain;
-    border-radius: var(--ll-radius-md);
-    transition: opacity 0.2s ease;
-  }
-
-  .ll-gallery-nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 36px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.95);
-    border: 1px solid var(--ll-border);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 10;
-    transition: all 0.2s ease;
-    box-shadow: var(--ll-shadow-subtle);
-    color: var(--ll-dark);
-  }
-
-  .ll-gallery-nav-btn:hover {
-    background: var(--ll-primary);
-    color: #ffffff;
-  }
-
-  .ll-gallery-nav-prev { left: 12px; }
-  .ll-gallery-nav-next { right: 12px; }
-
-  .ll-thumbnails {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 14px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-
-  .ll-thumb-btn {
-    width: 68px;
-    height: 68px;
-    border-radius: var(--ll-radius-md);
-    border: 2px solid transparent;
-    padding: 2px;
-    background: var(--ll-bg-surface);
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: border-color 0.2s ease;
-  }
-
-  .ll-thumb-btn img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 6px;
-  }
-
-  .ll-thumb-btn.active {
-    border-color: var(--ll-primary);
-  }
-
-  /* Hero Content */
-  .ll-hero-content {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-
-  .ll-hero-subheadline {
-    font-size: 1.15rem;
-    color: var(--ll-muted);
-    line-height: 1.55;
-  }
-
-  .ll-hero-pricing {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    padding: 12px 0 6px;
-  }
-
-  .ll-price-main {
-    font-family: var(--ll-font-heading);
-    font-size: 2.2rem;
-    font-weight: 800;
-    color: var(--ll-dark);
-  }
-
-  .ll-price-compare {
-    font-size: 1.2rem;
-    color: var(--ll-muted);
-    text-decoration: line-through;
-  }
-
-  .ll-price-badge {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: #15803d;
-    background: #dcfce7;
-    padding: 4px 10px;
-    border-radius: var(--ll-radius-full);
-  }
-
-  .ll-hero-cta-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  @media (min-width: 480px) {
-    .ll-hero-cta-group {
-      flex-direction: row;
-      align-items: center;
-    }
-  }
-
-  .ll-hero-guarantees {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    font-size: 0.82rem;
-    color: var(--ll-muted);
-    margin-top: 4px;
-  }
-
-  /* SECTION 2: THE PROBLEM */
-  .ll-problem-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  @media (min-width: 768px) {
-    .ll-problem-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .ll-problem-card {
-    background: var(--ll-bg-surface);
-    border: 1px solid var(--ll-border);
-    border-radius: var(--ll-radius-lg);
-    padding: 28px 24px;
-    text-align: center;
-  }
-
-  .ll-problem-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background: #fee2e2;
-    color: #b91c1c;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 16px;
-    font-size: 1.3rem;
-  }
-
-  .ll-problem-intro {
-    text-align: center;
-    margin-top: 36px;
-    padding: 18px 24px;
-    background: var(--ll-primary-light);
-    border: 1px solid var(--ll-primary-border);
-    border-radius: var(--ll-radius-lg);
-    font-family: var(--ll-font-heading);
-    font-size: 1.25rem;
-    font-weight: 700;
-    color: var(--ll-primary-hover);
-  }
-
-  /* SECTION 3: HOW IT WORKS */
-  .ll-steps-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  @media (min-width: 768px) {
-    .ll-steps-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .ll-step-card {
-    background: #ffffff;
-    border: 1px solid var(--ll-border);
-    border-radius: var(--ll-radius-xl);
-    padding: 32px 24px;
-    box-shadow: var(--ll-shadow-card);
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    position: relative;
-  }
-
-  .ll-step-num {
-    font-family: var(--ll-font-heading);
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--ll-primary);
-    background: var(--ll-primary-light);
-    width: fit-content;
-    padding: 4px 12px;
-    border-radius: var(--ll-radius-full);
-  }
-
-  .ll-step-card h3 {
-    font-size: 1.3rem;
-  }
-
-  .ll-step-card p {
-    color: var(--ll-muted);
-    font-size: 0.95rem;
-  }
-
-  /* SECTION 4: WHY NON-ELECTRIC (COMPARISON) */
-  .ll-compare-box {
-    background: #ffffff;
-    border: 1px solid var(--ll-border);
-    border-radius: var(--ll-radius-xl);
-    padding: 36px 30px;
-    box-shadow: var(--ll-shadow-card);
-  }
-
-  .ll-checklist-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 14px;
-    margin: 28px 0;
-  }
-
-  @media (min-width: 768px) {
-    .ll-checklist-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px 32px;
-    }
-  }
-
-  .ll-check-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-weight: 600;
-    color: var(--ll-dark-soft);
-  }
-
-  .ll-check-bullet {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #dcfce7;
-    color: #15803d;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    flex-shrink: 0;
-  }
-
-  .ll-positioning-quote {
-    background: var(--ll-bg-surface);
-    border-left: 4px solid var(--ll-primary);
-    padding: 16px 20px;
-    border-radius: 0 var(--ll-radius-md) var(--ll-radius-md) 0;
-    font-size: 1.05rem;
-    color: var(--ll-dark-soft);
-    font-weight: 500;
-  }
-
-  /* SECTION 5 & 11: OBJECTIONS & FAQ ACCORDION */
-  .ll-faq-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .ll-faq-item {
-    background: #ffffff;
-    border: 1px solid var(--ll-border);
-    border-radius: var(--ll-radius-lg);
-    overflow: hidden;
-    transition: border-color 0.2s ease;
-  }
-
-  .ll-faq-item.active {
-    border-color: var(--ll-primary);
-    box-shadow: var(--ll-shadow-subtle);
-  }
-
-  .ll-faq-header {
-    padding: 20px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    font-family: var(--ll-font-heading);
-    font-size: 1.08rem;
-    font-weight: 700;
-    color: var(--ll-dark);
-    user-select: none;
-  }
-
-  .ll-faq-icon {
-    width: 20px;
-    height: 20px;
-    color: var(--ll-primary);
-    transition: transform 0.2s ease;
-    flex-shrink: 0;
-  }
-
-  .ll-faq-item.active .ll-faq-icon {
-    transform: rotate(180deg);
-  }
-
-  .ll-faq-body {
-    padding: 0 24px 22px;
-    font-size: 0.98rem;
-    color: var(--ll-muted);
-    line-height: 1.65;
-    display: none;
-  }
-
-  .ll-faq-item.active .ll-faq-body {
-    display: block;
-  }
-
-  /* SECTION 6: BENEFITS GRID */
-  .ll-benefits-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 24px;
-  }
-
-  @media (min-width: 768px) {
-    .ll-benefits-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (min-width: 992px) {
-    .ll-benefits-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .ll-benefit-card {
-    background: #ffffff;
-    border: 1px solid var(--ll-border);
-    border-radius: var(--ll-radius-lg);
-    padding: 28px 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .ll-benefit-icon {
-    font-size: 1.8rem;
-    margin-bottom: 4px;
-  }
-
-  .ll-benefit-card h3 {
-    font-size: 1.15rem;
-    color: var(--ll-dark);
-  }
-
-  .ll-benefit-card p {
-    font-size: 0.92rem;
-    color: var(--ll-muted);
-  }
-
-  /* SECTION 7: NOT EVERY CAT LOVES A ROBOT */
-  .ll-cat-card {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-    border-radius: var(--ll-radius-xl);
-    padding: 48px 36px;
-    color: #ffffff;
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  .ll-cat-card h2 {
-    color: #ffffff;
-    margin-bottom: 16px;
-  }
-
-  .ll-cat-card p {
-    color: #94a3b8;
-    font-size: 1.1rem;
-    line-height: 1.65;
-  }
-
-  /* SECTION 8: PRODUCT DETAILS / SPECS TABLE */
-  .ll-specs-table-wrap {
-    background: #ffffff;
-    border: 1px solid var(--ll-border);
-    border-radius: var(--ll-radius-xl);
-    overflow: hidden;
-    box-shadow: var(--ll-shadow-card);
-  }
-
-  .ll-specs-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-  }
-
-  .ll-specs-table tr {
-    border-bottom: 1px solid var(--ll-border);
-  }
-
-  .ll-specs-table tr:last-child {
-    border-bottom: none;
-  }
-
-  .ll-specs-table td {
-    padding: 16px 24px;
-    font-size: 0.95rem;
-  }
-
-  .ll-specs-table td:first-child {
-    font-weight: 700;
-    color: var(--ll-dark);
-    width: 38%;
-    background: var(--ll-bg-surface);
-  }
-
-  .ll-specs-table td:last-child {
-    color: var(--ll-text-body);
-  }
-
-  /* SECTION 9: WHAT'S INCLUDED */
-  .ll-included-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-
-  @media (min-width: 768px) {
-    .ll-included-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  .ll-included-item {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 16px 20px;
-    background: var(--ll-bg-surface);
-    border: 1px solid var(--ll-border);
-    border-radius: var(--ll-radius-md);
-    font-weight: 600;
-    color: var(--ll-dark-soft);
-  }
-
-  .ll-included-item svg {
-    width: 20px;
-    height: 20px;
-    color: var(--ll-primary);
-    flex-shrink: 0;
-  }
-
-  /* SECTION 10: SIMPLE PRICE / OFFER CARD */
-  .ll-offer-container {
-    max-width: 620px;
-    margin: 0 auto;
-    background: #ffffff;
-    border: 2px solid var(--ll-primary-border);
-    border-radius: var(--ll-radius-xl);
-    padding: 36px 30px;
-    box-shadow: var(--ll-shadow-card);
-    text-align: center;
-  }
-
-  .ll-offer-kicker {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--ll-primary);
-    margin-bottom: 8px;
-  }
-
-  .ll-offer-pricing {
-    display: flex;
-    align-items: baseline;
-    justify-content: center;
-    gap: 12px;
-    margin: 12px 0 20px;
-  }
-
-  .ll-offer-price {
-    font-family: var(--ll-font-heading);
-    font-size: 3rem;
-    font-weight: 800;
-    color: var(--ll-dark);
-    line-height: 1;
-  }
-
-  .ll-offer-compare {
-    font-size: 1.4rem;
-    color: var(--ll-muted);
-    text-decoration: line-through;
-  }
-
-  .ll-offer-trust-badges {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 18px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--ll-muted);
-  }
-
-  /* SECTION 12: FINAL CTA */
-  .ll-final-cta-card {
-    background: var(--ll-bg-surface);
-    border: 1px solid var(--ll-border);
-    border-radius: var(--ll-radius-xl);
-    padding: 60px 32px;
-    text-align: center;
-  }
-
-  .ll-final-cta-card h2 {
-    margin-bottom: 10px;
-  }
-
-  .ll-final-cta-card p {
-    color: var(--ll-muted);
-    font-size: 1.1rem;
-    margin-bottom: 28px;
-  }
-
-  /* Sticky Mobile Bar */
-  .ll-sticky-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 99;
-    background: rgba(255, 255, 255, 0.97);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--ll-border);
-    padding: 12px 18px;
-    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.06);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    transform: translateY(120%);
-    transition: transform 0.25s ease;
-  }
-
-  .ll-sticky-bar.visible {
-    transform: translateY(0);
-  }
-
-  .ll-sticky-left {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .ll-sticky-name {
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--ll-dark);
-  }
-
-  .ll-sticky-price {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--ll-primary);
-  }
-
-  /* Footer */
-  .ll-footer {
-    padding: 36px 0;
-    text-align: center;
-    color: var(--ll-muted);
-    font-size: 0.85rem;
-    border-top: 1px solid var(--ll-border);
-  }
+/* ─── TOKENS ─────────────────────────────────────────────────── */
+:root {
+  --c-brand:        #0a7c71;
+  --c-brand-mid:    #0d9488;
+  --c-brand-light:  #f0fdf9;
+  --c-brand-border: #b2f0e8;
+
+  --c-ink:          #0f1923;
+  --c-ink-soft:     #2d3d4d;
+  --c-muted:        #64748b;
+  --c-subtle:       #94a3b8;
+
+  --c-surface:      #ffffff;
+  --c-wash:         #f8fafc;
+  --c-line:         #e8edf2;
+
+  --c-green-bg:     #dcfce7;
+  --c-green-text:   #15803d;
+  --c-amber:        #d97706;
+  --c-amber-bg:     #fffbeb;
+
+  --f-head: 'Manrope', system-ui, sans-serif;
+  --f-body: 'Inter', system-ui, sans-serif;
+
+  --r-sm:   6px;
+  --r-md:   12px;
+  --r-lg:   18px;
+  --r-xl:   24px;
+  --r-pill: 999px;
+
+  --sh-card: 0 2px 12px rgba(15,25,35,.06), 0 1px 3px rgba(15,25,35,.04);
+  --sh-lift: 0 8px 28px rgba(15,25,35,.10), 0 2px 6px rgba(15,25,35,.05);
+}
+
+/* ─── RESET ──────────────────────────────────────────────────── */
+.ll * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+.ll { font-family: var(--f-body); font-size: 16px; color: var(--c-ink-soft); line-height: 1.6; background: var(--c-surface); overflow-x: hidden; }
+
+/* ─── LAYOUT ─────────────────────────────────────────────────── */
+.ll-wrap  { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+.ll-narrow { max-width: 780px;  margin: 0 auto; padding: 0 20px; }
+.ll-sec  { padding: 80px 0; }
+.ll-sec-alt { background: var(--c-wash); }
+@media(max-width:767px){ .ll-sec { padding: 56px 0; } }
+
+/* ─── TYPE ───────────────────────────────────────────────────── */
+.ll h1,.ll h2,.ll h3,.ll h4 { font-family: var(--f-head); color: var(--c-ink); line-height: 1.18; letter-spacing: -.025em; }
+.ll h1 { font-size: clamp(2.25rem, 5vw, 3.6rem); font-weight: 800; letter-spacing: -.035em; }
+.ll h2 { font-size: clamp(1.75rem, 3.2vw, 2.5rem); font-weight: 800; }
+.ll h3 { font-size: 1.2rem; font-weight: 700; }
+.ll h4 { font-size: 1rem; font-weight: 600; }
+.ll-kicker {
+  display: inline-block;
+  font-family: var(--f-head);
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+  color: var(--c-brand);
+  margin-bottom: 14px;
+}
+.ll-lede { font-size: 1.1rem; color: var(--c-muted); margin-top: 12px; line-height: 1.65; }
+
+/* ─── BUTTONS ────────────────────────────────────────────────── */
+.ll-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--f-head); font-weight: 700; font-size: .98rem;
+  padding: 15px 30px; border-radius: var(--r-pill);
+  border: 2px solid transparent; cursor: pointer; text-decoration: none;
+  transition: all .18s ease; white-space: nowrap; letter-spacing: -.01em;
+}
+.ll-btn-primary {
+  background: var(--c-brand); color: #fff;
+  box-shadow: 0 4px 18px rgba(10,124,113,.28);
+}
+.ll-btn-primary:hover { background: #086860; box-shadow: 0 6px 24px rgba(10,124,113,.36); transform: translateY(-1px); }
+.ll-btn-ghost {
+  background: transparent; color: var(--c-ink);
+  border-color: var(--c-line);
+}
+.ll-btn-ghost:hover { border-color: var(--c-brand); color: var(--c-brand); }
+.ll-btn-full { width: 100%; padding: 17px; font-size: 1.05rem; }
+.ll-btn-lg { padding: 18px 40px; font-size: 1.1rem; }
+
+/* ─── HEADER ─────────────────────────────────────────────────── */
+.ll-header {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(255,255,255,.96); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--c-line);
+}
+.ll-header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 62px;
+}
+.ll-logo {
+  font-family: var(--f-head); font-size: 1.35rem; font-weight: 800;
+  color: var(--c-ink); text-decoration: none; letter-spacing: -.04em;
+}
+.ll-logo span { color: var(--c-brand); }
+.ll-header-nav { display: none; gap: 28px; }
+.ll-header-nav a { font-size: .9rem; font-weight: 600; color: var(--c-muted); text-decoration: none; transition: color .15s; }
+.ll-header-nav a:hover { color: var(--c-brand); }
+@media(min-width:900px){ .ll-header-nav { display: flex; } }
+
+/* ─── HERO ───────────────────────────────────────────────────── */
+.ll-hero {
+  padding: 52px 0 68px;
+  background: linear-gradient(160deg, #f0fdf9 0%, var(--c-surface) 55%);
+}
+.ll-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 48px;
+  align-items: center;
+}
+@media(min-width:900px){
+  .ll-hero-grid { grid-template-columns: 52% 1fr; gap: 60px; }
+}
+
+/* Gallery */
+.ll-gallery {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-xl);
+  padding: 18px;
+  box-shadow: var(--sh-lift);
+}
+.ll-gallery-main {
+  position: relative;
+  background: linear-gradient(145deg, #f0fdf9 0%, #f8fafc 100%);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  aspect-ratio: 4/3;
+  display: flex; align-items: center; justify-content: center;
+}
+.ll-gallery-main img {
+  width: 100%; height: 100%; object-fit: contain;
+  transition: opacity .2s ease;
+}
+.ll-gallery-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,.92); border: 1px solid var(--c-line);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: var(--sh-card);
+  color: var(--c-ink); transition: all .15s;
+}
+.ll-gallery-arrow:hover { background: var(--c-brand); color: #fff; border-color: var(--c-brand); }
+.ll-gallery-arrow.prev { left: 10px; }
+.ll-gallery-arrow.next { right: 10px; }
+.ll-gallery-dots {
+  display: flex; gap: 8px; justify-content: center;
+  margin-top: 14px; padding-bottom: 2px;
+}
+.ll-thumb {
+  width: 64px; height: 64px; border-radius: var(--r-sm);
+  border: 2px solid transparent; cursor: pointer; overflow: hidden;
+  background: var(--c-wash); flex-shrink: 0; transition: border-color .15s;
+}
+.ll-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.ll-thumb.active { border-color: var(--c-brand); }
+
+/* Gallery placeholder SVG */
+.ll-gallery-placeholder {
+  display: flex; flex-direction: column; align-items: center; gap: 20px;
+  padding: 40px;
+}
+.ll-gallery-placeholder svg { opacity: .8; }
+.ll-gallery-placeholder p {
+  font-size: .85rem; color: var(--c-subtle); text-align: center;
+}
+
+/* Hero copy */
+.ll-hero-copy { display: flex; flex-direction: column; gap: 20px; }
+.ll-hero-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--f-head); font-size: .82rem; font-weight: 700;
+  color: var(--c-brand); background: var(--c-brand-light);
+  border: 1px solid var(--c-brand-border);
+  padding: 6px 14px; border-radius: var(--r-pill); width: fit-content;
+}
+.ll-hero-sub { font-size: 1.15rem; color: var(--c-muted); line-height: 1.6; }
+.ll-mini-checks {
+  display: flex; flex-wrap: wrap; gap: 10px 16px;
+}
+.ll-mini-check {
+  display: flex; align-items: center; gap: 7px;
+  font-size: .88rem; font-weight: 600; color: var(--c-ink-soft);
+}
+.ll-mini-check::before { content: '✓'; color: var(--c-brand); font-weight: 800; font-size: .9rem; }
+.ll-price-row {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  padding: 4px 0;
+}
+.ll-price { font-family: var(--f-head); font-size: 2.4rem; font-weight: 800; color: var(--c-ink); line-height: 1; }
+.ll-price-was { font-size: 1.15rem; color: var(--c-subtle); text-decoration: line-through; }
+.ll-price-save {
+  font-size: .82rem; font-weight: 700; color: var(--c-green-text);
+  background: var(--c-green-bg); padding: 4px 10px; border-radius: var(--r-pill);
+}
+.ll-cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* ─── MECHANISM STRIP ────────────────────────────────────────── */
+.ll-mech {
+  background: var(--c-ink);
+  padding: 22px 0;
+}
+.ll-mech-inner {
+  display: flex; align-items: center; justify-content: center;
+  gap: 0; flex-wrap: wrap;
+}
+.ll-mech-step {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 24px;
+}
+.ll-mech-step-num {
+  font-family: var(--f-head); font-size: .72rem; font-weight: 700;
+  color: var(--c-brand-mid); letter-spacing: .08em;
+}
+.ll-mech-step-label {
+  font-family: var(--f-head); font-size: 1rem; font-weight: 700;
+  color: #fff; letter-spacing: -.01em;
+}
+.ll-mech-arrow { color: #334155; font-size: 1.2rem; padding: 0 4px; }
+@media(max-width:600px){
+  .ll-mech-step { padding: 10px 16px; }
+  .ll-mech-arrow { display: none; }
+}
+
+/* ─── EXPLAIN ────────────────────────────────────────────────── */
+.ll-explain-grid {
+  display: grid; grid-template-columns: 1fr;
+  gap: 40px; align-items: center;
+}
+@media(min-width:900px){
+  .ll-explain-grid { grid-template-columns: 1fr 1fr; gap: 60px; }
+}
+.ll-explain-img {
+  border-radius: var(--r-xl); overflow: hidden;
+  background: var(--c-wash); aspect-ratio: 1;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--c-line);
+}
+.ll-explain-img img { width: 100%; height: 100%; object-fit: contain; }
+.ll-explain-copy { display: flex; flex-direction: column; gap: 20px; }
+.ll-explain-copy p { color: var(--c-muted); font-size: 1.05rem; line-height: 1.7; }
+
+/* ─── HOW IT WORKS ───────────────────────────────────────────── */
+.ll-steps {
+  display: grid; grid-template-columns: 1fr;
+  gap: 24px;
+}
+@media(min-width:768px){
+  .ll-steps { grid-template-columns: repeat(3,1fr); }
+}
+.ll-step {
+  background: var(--c-surface); border: 1px solid var(--c-line);
+  border-radius: var(--r-xl); padding: 32px 26px;
+  box-shadow: var(--sh-card);
+  display: flex; flex-direction: column; gap: 14px;
+  position: relative; overflow: hidden;
+}
+.ll-step::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--c-brand-mid);
+}
+.ll-step-badge {
+  font-family: var(--f-head); font-size: .75rem; font-weight: 800;
+  letter-spacing: .08em; color: var(--c-brand);
+  background: var(--c-brand-light); border: 1px solid var(--c-brand-border);
+  padding: 4px 12px; border-radius: var(--r-pill); width: fit-content;
+}
+.ll-step h3 { font-size: 1.3rem; margin-top: 4px; }
+.ll-step p { font-size: .95rem; color: var(--c-muted); line-height: 1.6; }
+.ll-step-img {
+  width: 100%; aspect-ratio: 4/3; border-radius: var(--r-md);
+  object-fit: cover; background: var(--c-wash);
+  margin-top: 8px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.ll-step-img img { width: 100%; height: 100%; object-fit: contain; }
+
+/* ─── BENEFITS GRID ──────────────────────────────────────────── */
+.ll-benefits {
+  display: grid; grid-template-columns: 1fr;
+  gap: 18px;
+}
+@media(min-width:600px){ .ll-benefits { grid-template-columns: repeat(2,1fr); } }
+@media(min-width:900px){ .ll-benefits { grid-template-columns: repeat(3,1fr); } }
+.ll-benefit {
+  background: var(--c-surface); border: 1px solid var(--c-line);
+  border-radius: var(--r-lg); padding: 26px 22px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.ll-benefit-icon {
+  width: 44px; height: 44px; border-radius: var(--r-md);
+  background: var(--c-brand-light); border: 1px solid var(--c-brand-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.25rem;
+}
+.ll-benefit h3 { font-size: 1.05rem; }
+.ll-benefit p { font-size: .9rem; color: var(--c-muted); line-height: 1.55; }
+
+/* ─── OBJECTIONS ─────────────────────────────────────────────── */
+.ll-obj-grid {
+  display: flex; flex-direction: column; gap: 14px;
+}
+.ll-obj {
+  background: var(--c-surface); border: 1px solid var(--c-line);
+  border-radius: var(--r-lg); overflow: hidden;
+  transition: border-color .15s;
+}
+.ll-obj.open { border-color: var(--c-brand-mid); }
+.ll-obj-q {
+  padding: 20px 22px; display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; cursor: pointer; user-select: none;
+}
+.ll-obj-q span {
+  font-family: var(--f-head); font-size: 1rem; font-weight: 700; color: var(--c-ink);
+  line-height: 1.3;
+}
+.ll-obj-icon {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  background: var(--c-wash); border: 1px solid var(--c-line);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--c-muted); transition: all .15s;
+}
+.ll-obj.open .ll-obj-icon { background: var(--c-brand); color: #fff; border-color: var(--c-brand); transform: rotate(45deg); }
+.ll-obj-a {
+  display: none; padding: 0 22px 20px;
+  font-size: .95rem; color: var(--c-muted); line-height: 1.65;
+}
+.ll-obj.open .ll-obj-a { display: block; }
+
+/* ─── COMPETITOR SECTION ─────────────────────────────────────── */
+.ll-dark-card {
+  background: var(--c-ink);
+  border-radius: var(--r-xl);
+  padding: 56px 40px;
+  text-align: center;
+  max-width: 860px; margin: 0 auto;
+}
+.ll-dark-card .ll-kicker { color: var(--c-brand-mid); }
+.ll-dark-card h2 { color: #fff; margin-bottom: 16px; }
+.ll-dark-card p { color: #94a3b8; font-size: 1.05rem; line-height: 1.7; max-width: 600px; margin: 0 auto; }
+.ll-no-list {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: 10px; margin-top: 28px;
+}
+.ll-no-pill {
+  font-family: var(--f-head); font-size: .88rem; font-weight: 700;
+  color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+  padding: 8px 18px; border-radius: var(--r-pill);
+}
+@media(max-width:600px){
+  .ll-dark-card { padding: 40px 22px; }
+}
+
+/* ─── SPEC TABLE ─────────────────────────────────────────────── */
+.ll-spec-wrap {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  box-shadow: var(--sh-card);
+}
+.ll-spec-table { width: 100%; border-collapse: collapse; }
+.ll-spec-table tr { border-bottom: 1px solid var(--c-line); }
+.ll-spec-table tr:last-child { border-bottom: none; }
+.ll-spec-table td { padding: 15px 22px; font-size: .95rem; vertical-align: top; }
+.ll-spec-table td:first-child {
+  font-family: var(--f-head); font-weight: 700; color: var(--c-ink);
+  background: var(--c-wash); width: 40%;
+}
+.ll-spec-table td:last-child { color: var(--c-ink-soft); }
+
+/* ─── INCLUDED ───────────────────────────────────────────────── */
+.ll-included-list {
+  display: grid; grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media(min-width:600px){ .ll-included-list { grid-template-columns: repeat(2,1fr); } }
+.ll-included-item {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: var(--c-surface); border: 1px solid var(--c-line);
+  border-radius: var(--r-md); padding: 16px 18px;
+}
+.ll-included-check {
+  width: 22px; height: 22px; border-radius: 50%; flex-shrink: 0;
+  background: var(--c-brand-light); border: 1px solid var(--c-brand-border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--c-brand); font-size: .8rem; font-weight: 800;
+}
+.ll-included-item span { font-size: .95rem; font-weight: 600; color: var(--c-ink-soft); line-height: 1.4; }
+
+/* ─── OFFER ──────────────────────────────────────────────────── */
+.ll-offer-card {
+  max-width: 580px; margin: 0 auto;
+  background: var(--c-surface);
+  border: 2px solid var(--c-brand-border);
+  border-radius: var(--r-xl);
+  padding: 40px 32px;
+  box-shadow: 0 4px 32px rgba(10,124,113,.10);
+  text-align: center;
+}
+.ll-offer-product-name {
+  font-family: var(--f-head); font-size: 1.5rem; font-weight: 800;
+  color: var(--c-ink); letter-spacing: -.03em; margin-bottom: 4px;
+}
+.ll-offer-sub { font-size: .9rem; color: var(--c-muted); margin-bottom: 16px; }
+.ll-offer-price-row {
+  display: flex; align-items: baseline; justify-content: center;
+  gap: 14px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.ll-offer-price { font-family: var(--f-head); font-size: 3.2rem; font-weight: 800; color: var(--c-ink); line-height: 1; }
+.ll-offer-was { font-size: 1.4rem; color: var(--c-subtle); text-decoration: line-through; }
+.ll-trust-row {
+  display: flex; justify-content: center; flex-wrap: wrap;
+  gap: 8px 20px; margin-top: 18px;
+}
+.ll-trust-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .82rem; font-weight: 600; color: var(--c-muted);
+}
+.ll-trust-icon { font-size: .9rem; }
+
+/* ─── TRUST SECTION ──────────────────────────────────────────── */
+.ll-trust-grid {
+  display: grid; grid-template-columns: repeat(2,1fr);
+  gap: 14px;
+}
+@media(min-width:600px){ .ll-trust-grid { grid-template-columns: repeat(4,1fr); } }
+.ll-trust-card {
+  background: var(--c-surface); border: 1px solid var(--c-line);
+  border-radius: var(--r-lg); padding: 22px 16px;
+  text-align: center; display: flex; flex-direction: column; gap: 10px; align-items: center;
+}
+.ll-trust-card-icon { font-size: 1.6rem; }
+.ll-trust-card h4 { font-size: .95rem; }
+.ll-trust-card p { font-size: .85rem; color: var(--c-muted); line-height: 1.45; }
+
+/* ─── FAQ ────────────────────────────────────────────────────── */
+.ll-faq-list { display: flex; flex-direction: column; gap: 10px; }
+.ll-faq {
+  background: var(--c-surface); border: 1px solid var(--c-line);
+  border-radius: var(--r-md); overflow: hidden;
+  transition: border-color .15s;
+}
+.ll-faq.open { border-color: var(--c-brand-mid); }
+.ll-faq-q {
+  padding: 18px 20px; display: flex; align-items: center;
+  justify-content: space-between; gap: 16px;
+  cursor: pointer; user-select: none;
+}
+.ll-faq-q span { font-family: var(--f-head); font-size: .98rem; font-weight: 700; color: var(--c-ink); }
+.ll-faq-chevron {
+  width: 22px; height: 22px; flex-shrink: 0;
+  color: var(--c-muted); transition: transform .15s;
+}
+.ll-faq.open .ll-faq-chevron { transform: rotate(180deg); color: var(--c-brand); }
+.ll-faq-a {
+  display: none; padding: 0 20px 18px;
+  font-size: .93rem; color: var(--c-muted); line-height: 1.65;
+}
+.ll-faq.open .ll-faq-a { display: block; }
+
+/* ─── FINAL CTA ──────────────────────────────────────────────── */
+.ll-final { text-align: center; }
+.ll-final h2 { margin-bottom: 12px; }
+.ll-final p { font-size: 1.1rem; color: var(--c-muted); margin-bottom: 28px; }
+
+/* ─── FOOTER ─────────────────────────────────────────────────── */
+.ll-footer {
+  padding: 32px 0; border-top: 1px solid var(--c-line);
+  text-align: center; color: var(--c-subtle); font-size: .82rem;
+}
+
+/* ─── STICKY BAR ─────────────────────────────────────────────── */
+.ll-sticky {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 300;
+  background: rgba(255,255,255,.96); backdrop-filter: blur(12px);
+  border-top: 1px solid var(--c-line);
+  padding: 12px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  transform: translateY(120%); transition: transform .25s ease;
+  box-shadow: 0 -4px 20px rgba(15,25,35,.08);
+}
+.ll-sticky.show { transform: translateY(0); }
+.ll-sticky-info { display: flex; flex-direction: column; gap: 1px; }
+.ll-sticky-name { font-family: var(--f-head); font-size: .88rem; font-weight: 800; color: var(--c-ink); }
+.ll-sticky-price { font-family: var(--f-head); font-size: 1.1rem; font-weight: 800; color: var(--c-brand); }
+
+/* ─── SECTION HEADING UTILITY ────────────────────────────────── */
+.ll-sec-head { margin-bottom: 44px; }
+.ll-sec-head.center { text-align: center; }
+.ll-sec-head h2 { margin-bottom: 10px; }
 </style>
 
-<div class="ll-page">
+<div class="ll">
 
-  <!-- HEADER -->
+  <!-- ══════════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════════ -->
   <header class="ll-header">
-    <div class="ll-container">
+    <div class="ll-wrap">
       <div class="ll-header-inner">
-        <a href="#hero" class="ll-brand">
-          Litter<span>Loops™</span>
-        </a>
-
+        <a href="#" class="ll-logo">Litter<span>Loops™</span></a>
         <nav class="ll-header-nav">
           <a href="#how-it-works">How It Works</a>
-          <a href="#why-non-electric">Why Non-Electric</a>
-          <a href="#objections">Objections & FAQ</a>
-          <a href="#specifications">Specs</a>
+          <a href="#why">Why Different</a>
+          <a href="#objections">Objections</a>
+          <a href="#offer">Get Yours</a>
         </nav>
-
-        <a href="#offer" class="ll-btn ll-btn-primary ll-btn-sm">
+        <a href="#offer" class="ll-btn ll-btn-primary" style="padding:10px 22px;font-size:.9rem;">
           Get LitterLoops™
         </a>
       </div>
     </div>
   </header>
 
-  <!-- SECTION 1: HERO -->
+  <!-- ══════════════════════════════════════════════
+       1 · HERO
+  ══════════════════════════════════════════════ -->
   <section class="ll-hero" id="hero">
-    <div class="ll-container">
+    <div class="ll-wrap">
       <div class="ll-hero-grid">
-        
-        <!-- Hero Visual Gallery -->
-        <div class="ll-gallery-card">
-          <div class="ll-gallery-viewport" id="ll-gallery-viewport">
-            {% if current_product.images.size > 0 %}
-              <img 
-                id="ll-main-product-image"
-                class="ll-gallery-main-img"
-                src="{{ current_product.featured_image | img_url: '900x900' }}" 
-                alt="{{ current_product.title | escape }}" 
+
+        <!-- Product Gallery -->
+        <div class="ll-gallery" id="ll-gallery-wrap">
+          <div class="ll-gallery-main" id="ll-gallery-main">
+            {%- if current_product.images.size > 0 -%}
+              <img
+                id="ll-main-img"
+                src="{{ current_product.featured_image | img_url: '900x900' }}"
+                alt="{{ current_product.title | escape }}"
                 loading="eager"
+                width="900" height="900"
               >
-              {% if current_product.images.size > 1 %}
-                <button type="button" class="ll-gallery-nav-btn ll-gallery-nav-prev" id="ll-gallery-prev" aria-label="Previous image">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              {%- if current_product.images.size > 1 -%}
+                <button class="ll-gallery-arrow prev" id="ll-prev" aria-label="Previous">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                 </button>
-                <button type="button" class="ll-gallery-nav-btn ll-gallery-nav-next" id="ll-gallery-next" aria-label="Next image">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                <button class="ll-gallery-arrow next" id="ll-next" aria-label="Next">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                 </button>
-              {% endif %}
-            {% else %}
-              <!-- Visual Rotating Graphic Fallback -->
-              <svg width="240" height="240" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="100" cy="100" r="82" fill="#ffffff" stroke="#0d9488" stroke-width="5" stroke-dasharray="6 5"/>
-                <circle cx="100" cy="100" r="68" fill="#f0fdfa"/>
-                <ellipse cx="100" cy="115" rx="46" ry="26" fill="#cbd5e1"/>
-                <path d="M72 96 Q100 118 128 96" stroke="#0d9488" stroke-width="4" stroke-linecap="round" fill="none"/>
-                <path d="M138 72 A 52 52 0 0 1 152 105" stroke="#d97706" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-                <polygon points="152,100 156,110 146,107" fill="#d97706"/>
-                <circle cx="100" cy="85" r="14" fill="#0f766e"/>
-              </svg>
-            {% endif %}
+              {%- endif -%}
+            {%- else -%}
+              <div class="ll-gallery-placeholder">
+                <svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="80" cy="80" r="70" fill="#f0fdf9" stroke="#b2f0e8" stroke-width="3"/>
+                  <circle cx="80" cy="80" r="50" fill="none" stroke="#0d9488" stroke-width="4" stroke-dasharray="8 5" stroke-linecap="round"/>
+                  <path d="M56 88 Q80 104 104 88" stroke="#0d9488" stroke-width="4" stroke-linecap="round" fill="none"/>
+                  <path d="M114 58 A 48 48 0 0 1 126 84" stroke="#d97706" stroke-width="4" stroke-linecap="round" fill="none"/>
+                  <polygon points="126,80 130,90 120,87" fill="#d97706"/>
+                  <circle cx="80" cy="68" r="14" fill="#0a7c71"/>
+                </svg>
+                <p>Product image will appear here<br>once connected to your Shopify catalog</p>
+              </div>
+            {%- endif -%}
           </div>
 
-          {% if current_product.images.size > 1 %}
-            <div class="ll-thumbnails" id="ll-thumbnails-row">
-              {% for image in current_product.images %}
-                <button 
-                  type="button" 
-                  class="ll-thumb-btn {% if forloop.first %}active{% endif %}" 
-                  data-img-src="{{ image | img_url: '900x900' }}"
-                  data-index="{{ forloop.index }}"
-                  aria-label="Thumbnail {{ forloop.index }}"
-                >
-                  <img src="{{ image | img_url: '140x140', crop: 'center' }}" alt="{{ image.alt | default: current_product.title | escape }}">
-                </button>
-              {% endfor %}
+          {%- if current_product.images.size > 1 -%}
+            <div class="ll-gallery-dots" id="ll-thumbs">
+              {%- for img in current_product.images -%}
+                <div class="ll-thumb {% if forloop.first %}active{% endif %}"
+                     data-src="{{ img | img_url: '900x900' }}"
+                     data-idx="{{ forloop.index0 }}"
+                     role="button" tabindex="0" aria-label="View image {{ forloop.index }}">
+                  <img src="{{ img | img_url: '140x140', crop: 'center' }}" alt="{{ img.alt | default: current_product.title | escape }}" loading="lazy">
+                </div>
+              {%- endfor -%}
             </div>
-          {% endif %}
+          {%- endif -%}
         </div>
 
         <!-- Hero Copy -->
-        <div class="ll-hero-content">
-          <div class="ll-pill-badge">
-            <span>Non-Electric Rotating Litter Box</span>
+        <div class="ll-hero-copy">
+          <div class="ll-hero-tag">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" fill="#0d9488"/></svg>
+            LitterLoops™
           </div>
 
-          <h1 class="ll-h1">Less Scooping. More Time With Your Cat.</h1>
+          <h1>Less Scooping.<br>More Time<br>With Your Cat.</h1>
 
-          <p class="ll-hero-subheadline">
-            LitterLoops™ uses a simple rotating design to separate clumped waste from clean litter — without electricity, batteries, motors, or complicated electronics.
+          <p class="ll-hero-sub">
+            The simple, non-electric way to separate clumped litter from clean litter.
           </p>
 
-          <div class="ll-hero-pricing">
-            <span class="ll-price-main">{{ price_display }}</span>
-            <span class="ll-price-compare">{{ compare_price_display }}</span>
-            <span class="ll-price-badge">Limited Launch Pricing</span>
+          <div class="ll-mini-checks">
+            <span class="ll-mini-check">No Electricity</span>
+            <span class="ll-mini-check">No Batteries</span>
+            <span class="ll-mini-check">No Motor</span>
+            <span class="ll-mini-check">No App</span>
           </div>
 
-          <div class="ll-hero-cta-group">
-            <a href="#offer" class="ll-btn ll-btn-primary">
-              Get LitterLoops™
-            </a>
-            <a href="#how-it-works" class="ll-btn ll-btn-secondary">
-              See How It Works
-            </a>
+          <div class="ll-price-row">
+            <span class="ll-price">$99.99</span>
+            <span class="ll-price-was">$149.99</span>
+            <span class="ll-price-save">Save $50</span>
           </div>
 
-          <div class="ll-hero-guarantees">
-            <span>✓ Non-electric design</span>
-            <span>✓ Familiar open box</span>
-            <span>✓ Easy daily rotation</span>
-          </div>
-        </div>
+          <form id="ll-hero-form">
+            <input type="hidden" id="ll-variant-id" value="{{ variant_id }}">
+            <div class="ll-cta-row">
+              <button type="submit" class="ll-btn ll-btn-primary ll-btn-lg" id="ll-hero-btn">
+                Get LitterLoops™
+              </button>
+              <a href="#how-it-works" class="ll-btn ll-btn-ghost">
+                See How It Works
+              </a>
+            </div>
+          </form>
 
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 2: THE PROBLEM -->
-  <section class="ll-section ll-section-alt">
-    <div class="ll-container">
-      <div class="ll-section-header">
-        <span class="ll-section-kicker">Daily Litter Box Maintenance</span>
-        <h2 class="ll-h2">Still Scooping Every Day?</h2>
-        <p class="ll-section-subtitle">Traditional litter boxes turn a basic daily routine into an unpleasant, time-consuming chore.</p>
-      </div>
-
-      <div class="ll-problem-grid">
-        <div class="ll-problem-card">
-          <div class="ll-problem-icon">⏳</div>
-          <h3 class="ll-h3">Digging Through Dirty Litter</h3>
-          <p>Sifting manually through used litter to track down small clumps takes unnecessary time and effort every morning and night.</p>
-        </div>
-
-        <div class="ll-problem-card">
-          <div class="ll-problem-icon">🗑️</div>
-          <h3 class="ll-h3">Wasting Clean Litter</h3>
-          <p>Hand scoops often throw out usable clean litter along with clumps, running through litter bags much faster than necessary.</p>
-        </div>
-
-        <div class="ll-problem-card">
-          <div class="ll-problem-icon">💨</div>
-          <h3 class="ll-h3">Dealing With Messy Clumps</h3>
-          <p>Fragile clumps crumble into small fragments when poked with a scoop, scattering dirty residue back into the clean bed.</p>
-        </div>
-      </div>
-
-      <div class="ll-problem-intro">
-        LitterLoops™ makes the daily cleanup faster and simpler.
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 3: HOW IT WORKS -->
-  <section class="ll-section" id="how-it-works">
-    <div class="ll-container">
-      <div class="ll-section-header">
-        <span class="ll-section-kicker">Simple 3-Step Process</span>
-        <h2 class="ll-h2">How LitterLoops™ Works</h2>
-        <p class="ll-section-subtitle">A straightforward mechanical sifting motion that takes seconds to complete.</p>
-      </div>
-
-      <div class="ll-steps-grid">
-        <div class="ll-step-card">
-          <span class="ll-step-num">01 — ROTATE</span>
-          <h3 class="ll-h3">Turn LitterLoops™</h3>
-          <p>Turn LitterLoops™ using the simple rotating mechanism. The drum rotates smoothly on its weighted, low-friction base.</p>
-        </div>
-
-        <div class="ll-step-card">
-          <span class="ll-step-num">02 — SEPARATE</span>
-          <h3 class="ll-h3">Sieve Catches Clumps</h3>
-          <p>Clean litter passes through the internal sifter while clumped waste is directed into the separate collection tray.</p>
-        </div>
-
-        <div class="ll-step-card">
-          <span class="ll-step-num">03 — REMOVE</span>
-          <h3 class="ll-h3">Remove Waste</h3>
-          <p>Remove the collected waste and you're ready to go. Slide the drawer back in and clean litter automatically returns to the bed.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 4: WHY NON-ELECTRIC? -->
-  <section class="ll-section ll-section-alt" id="why-non-electric">
-    <div class="ll-container-narrow">
-      <div class="ll-section-header">
-        <span class="ll-section-kicker">Mechanical Reliability</span>
-        <h2 class="ll-h2">Smart Doesn't Have To Mean Complicated.</h2>
-        <p class="ll-section-subtitle">An alternative for cat owners who prefer simple, quiet, non-electric cleaning.</p>
-      </div>
-
-      <div class="ll-compare-box">
-        <h3 class="ll-h3" style="margin-bottom: 6px;">Why Choose a Non-Electric Design?</h3>
-        <p style="color: var(--ll-muted); font-size: 0.95rem;">LitterLoops™ focuses on mechanical simplicity rather than sensitive motorized parts:</p>
-
-        <div class="ll-checklist-grid">
-          <div class="ll-check-item">
-            <span class="ll-check-bullet">✓</span>
-            <span>No electricity required</span>
-          </div>
-          <div class="ll-check-item">
-            <span class="ll-check-bullet">✓</span>
-            <span>No charging cords or wall plugs</span>
-          </div>
-          <div class="ll-check-item">
-            <span class="ll-check-bullet">✓</span>
-            <span>No motor or circuit boards to fail</span>
-          </div>
-          <div class="ll-check-item">
-            <span class="ll-check-bullet">✓</span>
-            <span>100% Quiet (no sudden whirs)</span>
-          </div>
-          <div class="ll-check-item">
-            <span class="ll-check-bullet">✓</span>
-            <span>Simple mechanical design</span>
-          </div>
-          <div class="ll-check-item">
-            <span class="ll-check-bullet">✓</span>
-            <span>No Wi-Fi apps or firmware updates</span>
-          </div>
-          <div class="ll-check-item">
-            <span class="ll-check-bullet">✓</span>
-            <span>Easy daily operation in seconds</span>
-          </div>
-          <div class="ll-check-item">
-            <span class="ll-check-bullet">✓</span>
-            <span>Place anywhere in your home</span>
-          </div>
-        </div>
-
-        <div class="ll-positioning-quote">
-          “An alternative for cat owners who prefer simple, quiet, non-electric cleaning.”
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 5: ADDRESS THE BIGGEST OBJECTIONS -->
-  <section class="ll-section" id="objections">
-    <div class="ll-container-narrow">
-      <div class="ll-section-header">
-        <span class="ll-section-kicker">Honest Answers</span>
-        <h2 class="ll-h2">Questions Cat Owners Are Already Asking</h2>
-        <p class="ll-section-subtitle">Clear, transparent facts about how LitterLoops™ operates in real homes.</p>
-      </div>
-
-      <div class="ll-faq-stack">
-
-        <div class="ll-faq-item active">
-          <div class="ll-faq-header">
-            <span>What happens when urine makes the litter wet?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-          <div class="ll-faq-body">
-            LitterLoops™ is designed to work with quality clumping litter. When your cat urinates, the litter absorbs moisture and forms a solid clump within minutes. When you rotate the drum, the built-in sifting grid safely catches these solid clumps and diverts them into the waste drawer while unsoiled loose granules filter back through.
-          </div>
-        </div>
-
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>Does litter stick to the bottom?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-          <div class="ll-faq-body">
-            Maintaining an optimal litter bed depth of 2.5 to 3 inches allows clumps to form in the litter layer before reaching the basin floor. The smooth, non-stick interior surface helps clumps roll freely during rotation. However, if a cat urinates directly against the edge or if litter is too shallow, an occasional light tap or quick wipe during routine maintenance may be needed.
-          </div>
-        </div>
-
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>Does it control odor?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-          <div class="ll-faq-body">
-            LitterLoops™ uses an open, naturally ventilated basin design that cats feel safe entering. Clumped waste is moved promptly into the enclosed bottom collection drawer. For optimal odor management, we recommend rotating the drum once or twice daily and emptying the waste compartment regularly.
-          </div>
-        </div>
-
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>Will it work for large cats?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-          <div class="ll-faq-body">
-            LitterLoops™ is engineered for standard adult cats up to 15–18 lbs [CONFIRM WITH SUPPLIER]. The spacious interior drum provides comfortable turning room and a wide, accessible entryway suitable for most domestic cat breeds.
-          </div>
-        </div>
-
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>Will my cat feel stable while using it?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-          <div class="ll-faq-body">
-            Yes. The drum sits securely in a reinforced base cradle fitted with non-slip rubberized foot pads. The unit remains completely stationary when your cat enters, steps, and exits. The drum only rotates when manually turned by hand.
-          </div>
-        </div>
-
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>What types of litter can I use?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-          <div class="ll-faq-body">
-            LitterLoops™ is compatible with any standard clumping clay litter, clumping corn/cassava litter, or fine-grain clumping plant litters. Non-clumping crystals, oversized non-clumping wood pellets, and paper pellets are not recommended because they do not form solid clumps for the sieve to separate.
-          </div>
-        </div>
-
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>Does it completely eliminate scooping?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-          <div class="ll-faq-body">
-            It significantly simplifies waste removal for daily maintenance, but occasional manual cleaning and periodic basin washdowns may still be necessary.
+          <div style="display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--c-subtle);margin-top:4px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Secure checkout
           </div>
         </div>
 
@@ -1225,111 +650,356 @@
     </div>
   </section>
 
-  <!-- SECTION 6: BENEFITS -->
-  <section class="ll-section ll-section-alt">
-    <div class="ll-container">
-      <div class="ll-section-header">
-        <span class="ll-section-kicker">Core Benefits</span>
-        <h2 class="ll-h2">Designed Around Simplicity</h2>
-        <p class="ll-section-subtitle">Thoughtful engineering that solves the daily cleanup friction without electronic fuss.</p>
+  <!-- ══════════════════════════════════════════════
+       MECHANISM STRIP
+  ══════════════════════════════════════════════ -->
+  <div class="ll-mech">
+    <div class="ll-wrap">
+      <div class="ll-mech-inner">
+        <div class="ll-mech-step">
+          <span class="ll-mech-step-num">01</span>
+          <span class="ll-mech-step-label">ROTATE</span>
+        </div>
+        <span class="ll-mech-arrow">→</span>
+        <div class="ll-mech-step">
+          <span class="ll-mech-step-num">02</span>
+          <span class="ll-mech-step-label">SEPARATE</span>
+        </div>
+        <span class="ll-mech-arrow">→</span>
+        <div class="ll-mech-step">
+          <span class="ll-mech-step-num">03</span>
+          <span class="ll-mech-step-label">REMOVE</span>
+        </div>
       </div>
+    </div>
+  </div>
 
-      <div class="ll-benefits-grid">
-        <div class="ll-benefit-card">
-          <div class="ll-benefit-icon">🐾</div>
-          <h3 class="ll-h3">Less Daily Scooping</h3>
-          <p>Spend less time digging through used litter each day with a fast rotating cleanup motion.</p>
+  <!-- ══════════════════════════════════════════════
+       2 · EXPLAIN THE PRODUCT
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-explain-grid">
+
+        <div class="ll-explain-img">
+          {%- if current_product.images.size > 0 -%}
+            <img src="{{ current_product.images[1] | default: current_product.featured_image | img_url: '700x700' }}"
+                 alt="{{ current_product.title | escape }}" loading="lazy">
+          {%- else -%}
+            <svg width="140" height="140" viewBox="0 0 140 140" fill="none">
+              <circle cx="70" cy="70" r="58" fill="#f0fdf9" stroke="#b2f0e8" stroke-width="2"/>
+              <path d="M42 78 Q70 96 98 78" stroke="#0d9488" stroke-width="4" stroke-linecap="round" fill="none"/>
+              <circle cx="70" cy="58" r="16" fill="#0a7c71" opacity=".9"/>
+            </svg>
+          {%- endif -%}
         </div>
 
-        <div class="ll-benefit-card">
+        <div class="ll-explain-copy">
+          <div>
+            <span class="ll-kicker">The Concept</span>
+            <h2>A Cleaner Litter Routine Without The Complicated Technology</h2>
+          </div>
+          <p>
+            LitterLoops™ uses a simple rotating design to help separate clumped waste from reusable clean litter.
+          </p>
+          <p>
+            Instead of digging through the litter box every day, simply rotate the unit, let the internal sieve separate the waste, remove it, and continue using the clean litter.
+          </p>
+          <p>
+            No sensors to calibrate. No app to configure. No motor to maintain. Just a straightforward mechanical design that makes the daily cleanup quicker and less unpleasant.
+          </p>
+          <a href="#offer" class="ll-btn ll-btn-primary" style="width:fit-content;">
+            Get LitterLoops™ — $99.99
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       3 · HOW IT WORKS
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec ll-sec-alt" id="how-it-works">
+    <div class="ll-wrap">
+      <div class="ll-sec-head center">
+        <span class="ll-kicker">Simple 3-Step Process</span>
+        <h2>How LitterLoops™ Works</h2>
+        <p class="ll-lede">A straightforward rotating mechanism that takes seconds per day.</p>
+      </div>
+
+      <div class="ll-steps">
+
+        <div class="ll-step">
+          <span class="ll-step-badge">01 — ROTATE</span>
+          <h3>Turn LitterLoops™</h3>
+          <p>Turn LitterLoops™ manually using the rotating mechanism. The drum rotates smoothly on its stable base.</p>
+          {%- if current_product.images[0] != blank -%}
+            <div class="ll-step-img">
+              <img src="{{ current_product.images[0] | img_url: '600x600' }}" alt="Rotating LitterLoops™" loading="lazy">
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="ll-step">
+          <span class="ll-step-badge">02 — SEPARATE</span>
+          <h3>Waste Is Separated</h3>
+          <p>The internal sieve retains clumped waste while clean, unsoiled litter granules pass through and return to the bed.</p>
+          {%- if current_product.images[1] != blank -%}
+            <div class="ll-step-img">
+              <img src="{{ current_product.images[1] | img_url: '600x600' }}" alt="Separating litter clumps" loading="lazy">
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="ll-step">
+          <span class="ll-step-badge">03 — REMOVE</span>
+          <h3>Remove The Waste</h3>
+          <p>Slide out the collection drawer, discard the separated waste, return the drawer, and your cat is ready to go again.</p>
+          {%- if current_product.images[2] != blank -%}
+            <div class="ll-step-img">
+              <img src="{{ current_product.images[2] | img_url: '600x600' }}" alt="Removing waste from LitterLoops™" loading="lazy">
+            </div>
+          {%- endif -%}
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       4 · WHY LITTERLOOPS?
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec" id="why">
+    <div class="ll-wrap">
+      <div class="ll-sec-head center">
+        <span class="ll-kicker">Core Benefits</span>
+        <h2>Why Cat Owners Are Switching To A Simpler Cleaning Routine</h2>
+      </div>
+
+      <div class="ll-benefits">
+
+        <div class="ll-benefit">
           <div class="ll-benefit-icon">⚡</div>
-          <h3 class="ll-h3">No Electricity</h3>
-          <p>No power plugs, charging cables, power adapters, or battery replacements required.</p>
+          <h3>No Electricity</h3>
+          <p>No power plug, charging cable, rechargeable battery, or motor of any kind required.</p>
         </div>
 
-        <div class="ll-benefit-card">
+        <div class="ll-benefit">
           <div class="ll-benefit-icon">🔇</div>
-          <h3 class="ll-h3">Quiet Operation</h3>
-          <p>No sudden motor noises or cycling sounds that could spook sound-sensitive cats.</p>
+          <h3>Quiet</h3>
+          <p>No motor means no sudden operating noise that could startle sound-sensitive cats.</p>
         </div>
 
-        <div class="ll-benefit-card">
+        <div class="ll-benefit">
+          <div class="ll-benefit-icon">🐾</div>
+          <h3>Less Scooping</h3>
+          <p>The rotating mechanism makes daily waste removal faster and less hands-on than traditional manual scooping.</p>
+        </div>
+
+        <div class="ll-benefit">
           <div class="ll-benefit-icon">🔄</div>
-          <h3 class="ll-h3">Simple Rotating Design</h3>
-          <p>A reliable mechanical cleaning process built with durable, long-lasting materials.</p>
+          <h3>Simple Design</h3>
+          <p>No complicated electronics, firmware updates, Wi-Fi pairing, or app required. Just rotate.</p>
         </div>
 
-        <div class="ll-benefit-card">
-          <div class="ll-benefit-icon">🧹</div>
-          <h3 class="ll-h3">Less Mess</h3>
-          <p>Clumped waste is systematically directed into a dedicated, slide-out collection tray.</p>
-        </div>
-
-        <div class="ll-benefit-card">
+        <div class="ll-benefit">
           <div class="ll-benefit-icon">♻️</div>
-          <h3 class="ll-h3">Reuse Clean Litter</h3>
-          <p>Separates clumps efficiently instead of discarding clean, usable litter prematurely.</p>
+          <h3>Reuse Clean Litter</h3>
+          <p>By separating clumps from clean granules, you discard only the waste rather than the entire litter bed.</p>
+        </div>
+
+        <div class="ll-benefit">
+          <div class="ll-benefit-icon">🗓️</div>
+          <h3>Easy Daily Routine</h3>
+          <p>Rotate, separate, remove. A repeatable process that takes seconds rather than minutes.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       5 · CUSTOMER OBJECTIONS
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec ll-sec-alt" id="objections">
+    <div class="ll-narrow">
+      <div class="ll-sec-head center">
+        <span class="ll-kicker">Honest Answers</span>
+        <h2>Questions Cat Owners Are Already Asking</h2>
+        <p class="ll-lede">Read these before buying. Transparency helps you make the right decision.</p>
+      </div>
+
+      <div class="ll-obj-grid">
+
+        <div class="ll-obj open">
+          <div class="ll-obj-q">
+            <span>Does it handle urine and wet clumps?</span>
+            <div class="ll-obj-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="ll-obj-a">
+            LitterLoops™ is designed for use with clumping litter. When your cat urinates, the moisture is absorbed and forms a solid clump. When you rotate the drum, the internal sieve catches these solid clumps and directs them into the waste drawer, while loose, unsoiled granules filter back through. For best results, allow a few minutes after your cat uses the box before rotating.
+          </div>
+        </div>
+
+        <div class="ll-obj">
+          <div class="ll-obj-q">
+            <span>Will litter stick to the bottom?</span>
+            <div class="ll-obj-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="ll-obj-a">
+            Maintaining the correct litter depth (as shown in the included instructions) helps prevent clumps from forming directly against the basin floor. If litter depth is insufficient or if a cat urinates directly against the side wall, some manual loosening may occasionally be required. The smooth interior surface is designed to minimize sticking, but some maintenance is normal.
+          </div>
+        </div>
+
+        <div class="ll-obj">
+          <div class="ll-obj-q">
+            <span>Does it control odor?</span>
+            <div class="ll-obj-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="ll-obj-a">
+            LitterLoops™ uses an open design that cats feel comfortable entering. The collection drawer helps contain separated waste. However, because the design is open, it does not seal odors the way an enclosed automatic box might. Regular rotation and prompt waste removal are your primary tools for managing odor. Using an odor-control clumping litter will also help.
+          </div>
+        </div>
+
+        <div class="ll-obj">
+          <div class="ll-obj-q">
+            <span>Will it work for larger cats?</span>
+            <div class="ll-obj-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="ll-obj-a">
+            Please check the product specifications on your order confirmation or in the included instructions for the confirmed size and weight recommendations. If your cat is a large breed such as a Maine Coon or Ragdoll, we recommend reviewing the listed dimensions before purchase to confirm it is a suitable fit.
+          </div>
+        </div>
+
+        <div class="ll-obj">
+          <div class="ll-obj-q">
+            <span>Will my cat feel stable while using it?</span>
+            <div class="ll-obj-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="ll-obj-a">
+            The drum sits in a fixed cradle base. It does not rotate on its own — only when you manually turn it. When your cat is inside using the box, the unit remains stationary. The base is designed to stay in place during normal use.
+          </div>
+        </div>
+
+        <div class="ll-obj">
+          <div class="ll-obj-q">
+            <span>What types of litter can I use?</span>
+            <div class="ll-obj-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="ll-obj-a">
+            LitterLoops™ requires a clumping litter to work correctly. The sifting mechanism relies on solid clumps forming so they can be retained by the sieve. Non-clumping litters, large wood pellets, paper pellets, or non-clumping crystals will not work with the separation mechanism. Please check the product specifications for the confirmed list of compatible litter types.
+          </div>
+        </div>
+
+        <div class="ll-obj">
+          <div class="ll-obj-q">
+            <span>How often do I need to empty the waste compartment?</span>
+            <div class="ll-obj-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="ll-obj-a">
+            The frequency depends on how many cats use the box and how often they go. As a general guide, rotating daily and emptying the waste drawer every few days will keep the unit operating cleanly. The included instructions provide guidance specific to this unit.
+          </div>
+        </div>
+
+        <div class="ll-obj">
+          <div class="ll-obj-q">
+            <span>Do I still need to do any manual cleaning?</span>
+            <div class="ll-obj-icon">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
+          </div>
+          <div class="ll-obj-a">
+            Yes. LitterLoops™ significantly simplifies daily waste removal, but it does not eliminate all cleaning. Periodic basin rinse-downs and occasional spot cleaning will still be necessary, as with any litter box. It is an easier routine — not a hands-free one.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       6 · COMPETITOR OBJECTION
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-dark-card">
+        <span class="ll-kicker">For Cat Owners Who Want Simple</span>
+        <h2>Don't Want A Complicated Litter Robot?</h2>
+        <p>
+          LitterLoops™ is designed for cat owners who prefer a simple, quiet, non-electric cleaning solution — not an alternative that claims to be better than every automatic litter box, but a genuinely different approach.
+        </p>
+        <div class="ll-no-list">
+          <span class="ll-no-pill">No Motor</span>
+          <span class="ll-no-pill">No Charging</span>
+          <span class="ll-no-pill">No App</span>
+          <span class="ll-no-pill">No Noise</span>
+          <span class="ll-no-pill">No Electricity</span>
+          <span class="ll-no-pill">No Complicated Setup</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SECTION 7: NOT EVERY CAT LOVES A ROBOT -->
-  <section class="ll-section">
-    <div class="ll-container">
-      <div class="ll-cat-card">
-        <span class="ll-section-kicker" style="color: #2dd4bf;">Familiar & Non-Threatening</span>
-        <h2 class="ll-h2">Not Every Cat Loves A Robot.</h2>
-        <p>
-          Some cats are uncomfortable with enclosed or motorized litter boxes. LitterLoops™ offers a simpler alternative: an open, familiar litter-box experience with an easier cleaning process.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 8: PRODUCT DETAILS / SPECS -->
-  <section class="ll-section ll-section-alt" id="specifications">
-    <div class="ll-container-narrow">
-      <div class="ll-section-header">
-        <span class="ll-section-kicker">Technical Information</span>
-        <h2 class="ll-h2">Product Specifications</h2>
-        <p class="ll-section-subtitle">Detailed dimensions, materials, and operational specifications.</p>
+  <!-- ══════════════════════════════════════════════
+       7 · PRODUCT SPECIFICATIONS
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec ll-sec-alt" id="specifications">
+    <div class="ll-narrow">
+      <div class="ll-sec-head center">
+        <span class="ll-kicker">Technical Details</span>
+        <h2>Product Specifications</h2>
+        <p class="ll-lede">Only confirmed information is shown below. Items marked [verify] should be confirmed with product documentation.</p>
       </div>
 
-      <div class="ll-specs-table-wrap">
-        <table class="ll-specs-table">
+      <div class="ll-spec-wrap">
+        <table class="ll-spec-table">
           <tbody>
             <tr>
-              <td>Product Dimensions</td>
-              <td>Approx. 20.5" L × 19.5" W × 19.8" H [CONFIRM WITH SUPPLIER]</td>
-            </tr>
-            <tr>
-              <td>Unit Weight</td>
-              <td>Approx. 9.5 lbs (empty) [CONFIRM WITH SUPPLIER]</td>
-            </tr>
-            <tr>
-              <td>Recommended Cat Size</td>
-              <td>Up to 15–18 lbs (standard adult cats) [CONFIRM WITH SUPPLIER]</td>
-            </tr>
-            <tr>
-              <td>Litter Compatibility</td>
-              <td>Clumping clay, clumping corn, cassava, or fine plant litters</td>
-            </tr>
-            <tr>
-              <td>Material</td>
-              <td>Durable, BPA-free polypropylene / ABS plastic [CONFIRM WITH SUPPLIER]</td>
-            </tr>
-            <tr>
-              <td>Cleaning Method</td>
-              <td>Manual rotating mechanism with integrated sifter</td>
+              <td>Cleaning Mechanism</td>
+              <td>Manual rotating drum with internal sifting grid</td>
             </tr>
             <tr>
               <td>Power Requirements</td>
-              <td>Zero power / No electricity required</td>
+              <td>None — no electricity, batteries, or motor</td>
+            </tr>
+            <tr>
+              <td>Litter Compatibility</td>
+              <td>Clumping litter required. Non-clumping types are not compatible with the sifting mechanism.</td>
             </tr>
             <tr>
               <td>Assembly</td>
-              <td>Tool-free assembly (snaps securely into base cradle in under 2 minutes)</td>
+              <td>Tool-free. Drum fits into base cradle. Full instructions included.</td>
+            </tr>
+            <tr>
+              <td>Dimensions</td>
+              <td>Please refer to the product listing or packaging for confirmed dimensions</td>
+            </tr>
+            <tr>
+              <td>Unit Weight</td>
+              <td>Please refer to the product listing or packaging for confirmed weight</td>
+            </tr>
+            <tr>
+              <td>Recommended Cat Size</td>
+              <td>Please refer to the product listing or packaging for the confirmed weight/size limit</td>
+            </tr>
+            <tr>
+              <td>Material</td>
+              <td>Please refer to the product listing or packaging for confirmed material information</td>
             </tr>
           </tbody>
         </table>
@@ -1337,367 +1007,361 @@
     </div>
   </section>
 
-  <!-- SECTION 9: WHAT'S INCLUDED -->
-  <section class="ll-section">
-    <div class="ll-container-narrow">
-      <div class="ll-section-header">
-        <span class="ll-section-kicker">Package Contents</span>
-        <h2 class="ll-h2">What's In The Box</h2>
-        <p class="ll-section-subtitle">Everything you need to set up and start using LitterLoops™ right away.</p>
+  <!-- ══════════════════════════════════════════════
+       8 · WHAT'S INCLUDED
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec">
+    <div class="ll-narrow">
+      <div class="ll-sec-head center">
+        <span class="ll-kicker">In The Box</span>
+        <h2>What's Included</h2>
       </div>
 
-      <div class="ll-included-grid">
+      <div class="ll-included-list">
         <div class="ll-included-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          <span>LitterLoops™ Main Rotating Drum Basin</span>
+          <div class="ll-included-check">✓</div>
+          <span>LitterLoops™ Rotating Drum Basin</span>
         </div>
         <div class="ll-included-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          <span>Internal Clump Separation Sifter Grid</span>
+          <div class="ll-included-check">✓</div>
+          <span>Internal Sifting Grid</span>
         </div>
         <div class="ll-included-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <div class="ll-included-check">✓</div>
           <span>Slide-Out Waste Collection Drawer</span>
         </div>
         <div class="ll-included-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          <span>Reinforced Non-Slip Base Cradle Stand</span>
+          <div class="ll-included-check">✓</div>
+          <span>Base Cradle Stand</span>
         </div>
         <div class="ll-included-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-          <span>Quick-Start User & Care Guide</span>
+          <div class="ll-included-check">✓</div>
+          <span>User & Care Instructions</span>
         </div>
       </div>
+
+      <p style="margin-top:18px;font-size:.85rem;color:var(--c-subtle);text-align:center;">
+        If the actual package contents differ, the included instruction sheet is the definitive reference.
+      </p>
     </div>
   </section>
 
-  <!-- SECTION 10: PRICE & OFFER -->
-  <section class="ll-section ll-section-alt" id="offer">
-    <div class="ll-container">
-      <div class="ll-offer-container">
-        <span class="ll-offer-kicker">Limited Launch Pricing</span>
-        <h2 class="ll-h2">LitterLoops™</h2>
-        <p style="color: var(--ll-muted); font-size: 0.98rem; margin-top: 4px;">Non-Electric Self-Cleaning Cat Litter Box</p>
+  <!-- ══════════════════════════════════════════════
+       9 · PRICE / OFFER
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec ll-sec-alt" id="offer">
+    <div class="ll-wrap">
+      <div class="ll-offer-card">
+        <div class="ll-offer-product-name">LitterLoops™</div>
+        <div class="ll-offer-sub">Non-Electric Self-Cleaning Cat Litter Box</div>
 
-        <div class="ll-offer-pricing">
-          <span class="ll-offer-price">{{ price_display }}</span>
-          <span class="ll-offer-compare">{{ compare_price_display }}</span>
+        <div class="ll-offer-price-row">
+          <span class="ll-offer-price">$99.99</span>
+          <span class="ll-offer-was">$149.99</span>
         </div>
 
-        <form action="/cart/add" method="post" enctype="multipart/form-data" id="ll-direct-checkout-form">
-          <input type="hidden" name="id" id="ll-variant-id" value="{{ variant_id }}">
-          <input type="hidden" name="quantity" value="1">
+        <p style="font-size:.9rem;color:var(--c-muted);margin-bottom:20px;">Launch pricing — no countdown, no fake scarcity.</p>
 
-          <button type="submit" class="ll-btn ll-btn-primary ll-btn-block" id="ll-checkout-btn">
-            Get LitterLoops™
+        <form id="ll-offer-form">
+          <button type="submit" class="ll-btn ll-btn-primary ll-btn-full" id="ll-offer-btn">
+            Get LitterLoops™ — $99.99
           </button>
         </form>
 
-        <div class="ll-offer-trust-badges">
-          <span>🔒 Secure checkout</span>
-          <span>📦 Fast shipping</span>
-          <span>🔄 Easy returns</span>
+        <div class="ll-trust-row">
+          <span class="ll-trust-item"><span class="ll-trust-icon">🔒</span> Secure checkout</span>
+          <span class="ll-trust-item"><span class="ll-trust-icon">↩️</span> Easy returns</span>
+          <span class="ll-trust-item"><span class="ll-trust-icon">📦</span> Order tracking</span>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SECTION 11: COMPREHENSIVE FAQ -->
-  <section class="ll-section">
-    <div class="ll-container-narrow">
-      <div class="ll-section-header">
-        <span class="ll-section-kicker">Help Center</span>
-        <h2 class="ll-h2">Frequently Asked Questions</h2>
-        <p class="ll-section-subtitle">Everything you need to know about setting up, using, and cleaning LitterLoops™.</p>
+  <!-- ══════════════════════════════════════════════
+       10 · TRUST SECTION
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec">
+    <div class="ll-wrap">
+      <div class="ll-sec-head center">
+        <span class="ll-kicker">Our Commitment</span>
+        <h2>Shop With Confidence</h2>
       </div>
 
-      <div class="ll-faq-stack">
+      <div class="ll-trust-grid">
+        <div class="ll-trust-card">
+          <div class="ll-trust-card-icon">🔒</div>
+          <h4>Secure Checkout</h4>
+          <p>All transactions are processed through encrypted, secure payment gateways.</p>
+        </div>
+        <div class="ll-trust-card">
+          <div class="ll-trust-card-icon">↩️</div>
+          <h4>Easy Returns</h4>
+          <p>Not happy with your order? Contact our support team to arrange a return.</p>
+        </div>
+        <div class="ll-trust-card">
+          <div class="ll-trust-card-icon">📦</div>
+          <h4>Order Tracking</h4>
+          <p>Track your shipment from our warehouse to your front door.</p>
+        </div>
+        <div class="ll-trust-card">
+          <div class="ll-trust-card-icon">💬</div>
+          <h4>Customer Support</h4>
+          <p>Questions before or after your order? We're here to help.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
+  <!-- ══════════════════════════════════════════════
+       11 · FAQ
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec ll-sec-alt" id="faq">
+    <div class="ll-narrow">
+      <div class="ll-sec-head center">
+        <span class="ll-kicker">Help Center</span>
+        <h2>Frequently Asked Questions</h2>
+      </div>
+
+      <div class="ll-faq-list">
+
+        <div class="ll-faq">
+          <div class="ll-faq-q">
             <span>How does LitterLoops™ work?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            You simply turn the drum manually one full rotation. The internal sifting grid captures clumped waste and deposits it into the separate collection tray below, while clean litter filters back into the pan.
-          </div>
+          <div class="ll-faq-a">You manually turn the drum using the rotating mechanism. The internal sieve retains clumped waste while clean litter granules filter back through into the pan. You then slide out the waste drawer, discard the contents, and the box is ready for your cat's next visit.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
+        <div class="ll-faq">
+          <div class="ll-faq-q">
             <span>Does it require electricity?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            No. LitterLoops™ is completely non-electric. It does not use cords, wall outlets, rechargeable batteries, or motors.
-          </div>
+          <div class="ll-faq-a">No. LitterLoops™ does not require electricity, a wall outlet, a charging cable, or any external power source.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>What type of litter should I use?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <div class="ll-faq">
+          <div class="ll-faq-q">
+            <span>Does it use batteries?</span>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            Any standard clumping litter (clumping clay, clumping corn/cassava, or fine plant litters). Non-clumping litters, large wood pellets, or non-clumping crystals are not compatible.
-          </div>
+          <div class="ll-faq-a">No. There are no batteries, rechargeable cells, or electrical components of any kind.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
+        <div class="ll-faq">
+          <div class="ll-faq-q">
+            <span>What type of litter can I use?</span>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="ll-faq-a">You must use a clumping litter. The sifting mechanism depends on solid clumps forming so the sieve can separate them from clean granules. Non-clumping litters (including most crystals, wood pellets, and paper pellets) will not work correctly. Please check the product specifications for the confirmed list of compatible litter types.</div>
+        </div>
+
+        <div class="ll-faq">
+          <div class="ll-faq-q">
             <span>Can large cats use it?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            Yes, standard adult cats up to 15–18 lbs [CONFIRM WITH SUPPLIER] can use LitterLoops™ comfortably.
-          </div>
+          <div class="ll-faq-a">Please refer to the product dimensions and weight limit in the product listing or included instructions to confirm suitability for your cat.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>How often should I empty the waste compartment?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <div class="ll-faq">
+          <div class="ll-faq-q">
+            <span>Does it handle wet litter?</span>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            For a single cat, we recommend emptying the waste drawer every 3 to 7 days depending on usage. For multiple cats, empty every 2 to 3 days.
-          </div>
+          <div class="ll-faq-a">Yes, within the expected behavior of clumping litter. Urine is absorbed and forms a solid clump, which the sieve then catches when you rotate. Wait a few minutes after use before rotating to give the litter time to clump fully.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
+        <div class="ll-faq">
+          <div class="ll-faq-q">
+            <span>Does litter stick to the bottom?</span>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="ll-faq-a">Using the correct litter depth (refer to the included instructions) minimizes sticking. If your cat urinates against the basin wall at a very shallow litter depth, occasional manual loosening may be needed during routine cleaning.</div>
+        </div>
+
+        <div class="ll-faq">
+          <div class="ll-faq-q">
             <span>Does it eliminate odor?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            LitterLoops™ separates waste into a dedicated drawer to reduce surface odor, but because it is an open-top design, regular daily rotation and routine drawer emptying are required to keep odors minimal.
-          </div>
+          <div class="ll-faq-a">LitterLoops™ has an open design. It does not seal or eliminate odors by itself. Moving waste into the collection drawer promptly and rotating the drum regularly will reduce surface odor. Using an odor-control clumping litter can help further.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>Does wet litter stick to the bottom?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <div class="ll-faq">
+          <div class="ll-faq-q">
+            <span>How often should I empty the waste compartment?</span>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            When filled to the recommended 2.5–3" litter depth, clumps form within the litter layer before touching the bottom. If shallow or if urine hits the base, occasional manual loosening may be required.
-          </div>
+          <div class="ll-faq-a">Frequency depends on how many cats use the unit and their individual habits. The included instructions provide specific guidance. As a general practice, rotating daily and emptying every few days works for most single-cat households.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>How do I clean the unit?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <div class="ll-faq">
+          <div class="ll-faq-q">
+            <span>Do I still need to manually clean the box?</span>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            Because there are zero electrical parts or wires, the entire drum and drawer can be detached in seconds, rinsed with warm water and pet-safe soap, and air-dried.
-          </div>
+          <div class="ll-faq-a">Yes. LitterLoops™ makes the daily waste removal process faster and easier, but it does not replace periodic deep cleaning. You will still need to rinse the basin and components regularly as part of normal litter box maintenance.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>How much litter should I put inside?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <div class="ll-faq">
+          <div class="ll-faq-q">
+            <span>How do I clean LitterLoops™?</span>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            Fill to the interior max fill line indicator (approximately 2.5 to 3 inches of clumping litter). Overfilling may cause excess clean litter to spill into the waste chute during rotation.
-          </div>
+          <div class="ll-faq-a">Because there are no electrical components, the drum and drawer can be detached, rinsed with warm water and a pet-safe soap, and air-dried. Refer to the included care instructions for a detailed cleaning guide.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>Is it suitable for multiple cats?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <div class="ll-faq">
+          <div class="ll-faq-q">
+            <span>What is included in the box?</span>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            Yes, multiple cats can share LitterLoops™. Simply rotate the drum after usage periods and empty the waste drawer more frequently.
-          </div>
+          <div class="ll-faq-a">The standard package includes the LitterLoops™ rotating drum basin, the internal sifting grid, the slide-out waste collection drawer, the base cradle stand, and a user & care instruction guide.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>What happens if my cat doesn't like it?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </div>
-          <div class="ll-faq-body">
-            Most cats adapt quickly because LitterLoops™ maintains an open, quiet, and familiar litter pan format. Follow our step-by-step transition guide included in the manual. If it does not work out, contact our customer support team.
-          </div>
-        </div>
-
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
+        <div class="ll-faq">
+          <div class="ll-faq-q">
             <span>How long does shipping take?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            Orders are processed within 24–48 hours. Standard domestic shipping typically arrives within 3 to 7 business days [CONFIRM WITH STORE POLICY].
-          </div>
+          <div class="ll-faq-a">Please check the shipping information in your order confirmation email or on our store's shipping policy page for the most accurate estimate for your location.</div>
         </div>
 
-        <div class="ll-faq-item">
-          <div class="ll-faq-header">
-            <span>What is the return/refund policy?</span>
-            <svg class="ll-faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+        <div class="ll-faq">
+          <div class="ll-faq-q">
+            <span>What is the return policy?</span>
+            <svg class="ll-faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
           </div>
-          <div class="ll-faq-body">
-            We offer our standard customer satisfaction return window. Please review our store policy page or contact our support team for full return details [CONFIRM WITH STORE POLICY].
-          </div>
+          <div class="ll-faq-a">Please refer to our store's return policy page or contact our customer support team for the full details on returns and refunds.</div>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- SECTION 12: FINAL CTA -->
-  <section class="ll-section ll-section-alt">
-    <div class="ll-container-narrow">
-      <div class="ll-final-cta-card">
-        <h2 class="ll-h2">Ready To Spend Less Time Cleaning?</h2>
-        <p>Make litter-box maintenance simpler with LitterLoops™.</p>
-        <a href="#offer" class="ll-btn ll-btn-primary" style="padding: 18px 40px; font-size: 1.15rem;">
-          Get LitterLoops™ — {{ price_display }}
+  <!-- ══════════════════════════════════════════════
+       12 · FINAL CTA
+  ══════════════════════════════════════════════ -->
+  <section class="ll-sec">
+    <div class="ll-narrow">
+      <div class="ll-final">
+        <span class="ll-kicker">Ready?</span>
+        <h2>Ready To Spend Less Time Scooping?</h2>
+        <p>Make your cat's litter routine simpler with LitterLoops™.</p>
+        <a href="#offer" class="ll-btn ll-btn-primary ll-btn-lg">
+          Get LitterLoops™ — $99.99
         </a>
       </div>
     </div>
   </section>
 
-  <!-- STICKY MOBILE BUY BAR -->
-  <div class="ll-sticky-bar" id="ll-sticky-mobile-bar">
-    <div class="ll-sticky-left">
-      <div class="ll-sticky-name">LitterLoops™</div>
-      <div class="ll-sticky-price">{{ price_display }}</div>
+  <!-- ══════════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════════ -->
+  <footer class="ll-footer">
+    <div class="ll-wrap">
+      © {{ 'now' | date: '%Y' }} LitterLoops™ &nbsp;·&nbsp; A smarter, simpler way to clean your cat's litter box — without electricity.
     </div>
-    <a href="#offer" class="ll-btn ll-btn-primary ll-btn-sm" id="ll-sticky-buy-btn">
+  </footer>
+
+  <!-- ══════════════════════════════════════════════
+       STICKY MOBILE BAR
+  ══════════════════════════════════════════════ -->
+  <div class="ll-sticky" id="ll-sticky">
+    <div class="ll-sticky-info">
+      <span class="ll-sticky-name">LitterLoops™</span>
+      <span class="ll-sticky-price">$99.99</span>
+    </div>
+    <a href="#offer" class="ll-btn ll-btn-primary" style="padding:11px 24px;font-size:.92rem;">
       Get LitterLoops™
     </a>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="ll-footer">
-    <div class="ll-container">
-      <p>© {{ 'now' | date: "%Y" }} LitterLoops™. A smarter, simpler way to clean your cat's litter box — without electricity.</p>
-    </div>
-  </footer>
+</div><!-- /ll -->
 
-</div>
-
-<!-- Interactive Scripts -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // 1. Interactive Image Gallery
-    const mainImg = document.getElementById('ll-main-product-image');
-    const thumbBtns = document.querySelectorAll('.ll-thumb-btn');
-    const prevBtn = document.getElementById('ll-gallery-prev');
-    const nextBtn = document.getElementById('ll-gallery-next');
-    let currentIndex = 0;
+(function(){
+  var variantId = document.getElementById('ll-variant-id');
 
-    function switchImage(index) {
-      if (!thumbBtns.length || !mainImg) return;
-      if (index < 0) index = thumbBtns.length - 1;
-      if (index >= thumbBtns.length) index = 0;
-      currentIndex = index;
-
-      const targetBtn = thumbBtns[currentIndex];
-      const newSrc = targetBtn.getAttribute('data-img-src');
-
-      mainImg.style.opacity = '0.4';
-      setTimeout(() => {
-        mainImg.src = newSrc;
-        mainImg.style.opacity = '1';
-      }, 150);
-
-      thumbBtns.forEach(btn => btn.classList.remove('active'));
-      targetBtn.classList.add('active');
-    }
-
-    thumbBtns.forEach((btn, idx) => {
-      btn.addEventListener('click', () => switchImage(idx));
+  /* ── Direct-to-checkout ── */
+  function bindCheckoutForm(formId, btnId){
+    var form = document.getElementById(formId);
+    var btn  = document.getElementById(btnId);
+    if (!form || !btn) return;
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      btn.disabled = true;
+      btn.textContent = 'One moment…';
+      var vid = variantId ? variantId.value : 0;
+      fetch('/cart/clear.js', {method:'POST'})
+        .then(function(){ return fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:vid,quantity:1})}); })
+        .then(function(){ window.location.href = '/checkout'; })
+        .catch(function(){ window.location.href = '/checkout'; });
     });
+  }
+  bindCheckoutForm('ll-hero-form',  'll-hero-btn');
+  bindCheckoutForm('ll-offer-form', 'll-offer-btn');
 
-    if (prevBtn) {
-      prevBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchImage(currentIndex - 1);
-      });
-    }
+  /* ── Gallery ── */
+  var mainImg  = document.getElementById('ll-main-img');
+  var thumbs   = Array.from(document.querySelectorAll('.ll-thumb'));
+  var idx      = 0;
 
-    if (nextBtn) {
-      nextBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        switchImage(currentIndex + 1);
-      });
-    }
+  function goTo(n){
+    if (!thumbs.length || !mainImg) return;
+    idx = (n + thumbs.length) % thumbs.length;
+    mainImg.style.opacity = '0.35';
+    setTimeout(function(){
+      mainImg.src = thumbs[idx].dataset.src;
+      mainImg.style.opacity = '1';
+    }, 150);
+    thumbs.forEach(function(t){ t.classList.remove('active'); });
+    thumbs[idx].classList.add('active');
+  }
 
-    // 2. FAQ Accordion Interaction
-    const faqItems = document.querySelectorAll('.ll-faq-item');
-    faqItems.forEach(item => {
-      const header = item.querySelector('.ll-faq-header');
-      if (header) {
-        header.addEventListener('click', () => {
-          const isActive = item.classList.contains('active');
-          faqItems.forEach(i => i.classList.remove('active'));
-          if (!isActive) item.classList.add('active');
-        });
-      }
-    });
-
-    // 3. Sticky Mobile Buy Bar on Scroll
-    const stickyBar = document.getElementById('ll-sticky-mobile-bar');
-    const heroSection = document.getElementById('hero');
-
-    window.addEventListener('scroll', function() {
-      if (!stickyBar || !heroSection) return;
-      const heroBottom = heroSection.getBoundingClientRect().bottom;
-      if (heroBottom < 0) {
-        stickyBar.classList.add('visible');
-      } else {
-        stickyBar.classList.remove('visible');
-      }
-    });
-
-    // 4. Smooth Anchor Scroll
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const targetId = this.getAttribute('href');
-        if (targetId === '#') return;
-        const targetElement = document.querySelector(targetId);
-        if (targetElement) {
-          e.preventDefault();
-          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      });
-    });
-
-    // 5. 1-Click Direct Checkout Submission
-    const checkoutForm = document.getElementById('ll-direct-checkout-form');
-    if (checkoutForm) {
-      checkoutForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('ll-checkout-btn');
-        if (btn) {
-          btn.textContent = 'Processing...';
-          btn.style.opacity = '0.85';
-          btn.style.pointerEvents = 'none';
-        }
-
-        const variantId = document.getElementById('ll-variant-id').value;
-
-        fetch('/cart/clear.js', { method: 'POST' })
-          .then(() => {
-            return fetch('/cart/add.js', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ id: variantId, quantity: 1 })
-            });
-          })
-          .then(res => res.json())
-          .then(() => {
-            window.location.href = '/checkout';
-          })
-          .catch(err => {
-            console.error('Checkout error:', err);
-            window.location.href = '/checkout';
-          });
-      });
-    }
+  thumbs.forEach(function(t){
+    t.addEventListener('click', function(){ goTo(parseInt(t.dataset.idx)); });
+    t.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' ') goTo(parseInt(t.dataset.idx)); });
   });
+
+  var prev = document.getElementById('ll-prev');
+  var next = document.getElementById('ll-next');
+  if (prev) prev.addEventListener('click', function(){ goTo(idx-1); });
+  if (next) next.addEventListener('click', function(){ goTo(idx+1); });
+
+  /* ── Accordion (objections + FAQ) ── */
+  function initAccordion(selector, openClass){
+    document.querySelectorAll(selector).forEach(function(item){
+      var header = item.querySelector('[class$="-q"], [class$="-faq-q"]') || item.firstElementChild;
+      if (!header) return;
+      header.addEventListener('click', function(){
+        var isOpen = item.classList.contains('open');
+        document.querySelectorAll(selector).forEach(function(i){ i.classList.remove('open'); });
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+  }
+  initAccordion('.ll-obj');
+  initAccordion('.ll-faq');
+
+  /* ── Sticky bar ── */
+  var hero   = document.getElementById('hero');
+  var sticky = document.getElementById('ll-sticky');
+  if (sticky && hero){
+    window.addEventListener('scroll', function(){
+      sticky.classList.toggle('show', hero.getBoundingClientRect().bottom < 0);
+    }, {passive:true});
+  }
+
+  /* ── Smooth anchor scroll ── */
+  document.querySelectorAll('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var id = a.getAttribute('href');
+      if (id === '#') return;
+      var el = document.querySelector(id);
+      if (el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); }
+    });
+  });
+})();
 </script>
