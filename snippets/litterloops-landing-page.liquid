@@ -749,11 +749,66 @@ iframe.ll-video {
             <strong>The Smart Alternative:</strong> Litter Robot 4 costs $699. LitterLoops™ gives you the same rotating sifting convenience for $99.99 — with 0 electrical parts to fail.
           </p>
 
+          <!-- HERO BUNDLE SELECTOR TIERS -->
+          <div class="ll-bundles" id="ll-hero-bundle-picker">
+            
+            <!-- TIER 1: 1 UNIT -->
+            <div class="ll-bundle-card selected" data-qty="1" data-price="99.99" data-savings="50">
+              <div class="ll-bundle-left">
+                <div class="ll-bundle-radio"></div>
+                <div>
+                  <div class="ll-bundle-title">1x LitterLoops™</div>
+                  <div class="ll-bundle-sub">Single Cat Starter Pack</div>
+                </div>
+              </div>
+              <div class="ll-bundle-right">
+                <div class="ll-bundle-price">$99.99</div>
+                <div class="ll-bundle-was">$149.99</div>
+                <span class="ll-bundle-save">Save $50</span>
+              </div>
+            </div>
+
+            <!-- TIER 2: 2 UNITS -->
+            <div class="ll-bundle-card" data-qty="2" data-price="179.98" data-savings="120">
+              <span class="ll-bundle-badge popular">Most Popular</span>
+              <div class="ll-bundle-left">
+                <div class="ll-bundle-radio"></div>
+                <div>
+                  <div class="ll-bundle-title">2x LitterLoops™</div>
+                  <div class="ll-bundle-sub">Multi-Cat / 2-Floor Home ($89.99/ea)</div>
+                </div>
+              </div>
+              <div class="ll-bundle-right">
+                <div class="ll-bundle-price">$179.98</div>
+                <div class="ll-bundle-was">$299.98</div>
+                <span class="ll-bundle-save">Save $120</span>
+              </div>
+            </div>
+
+            <!-- TIER 3: 3 UNITS -->
+            <div class="ll-bundle-card" data-qty="3" data-price="249.97" data-savings="200">
+              <span class="ll-bundle-badge">Best Value</span>
+              <div class="ll-bundle-left">
+                <div class="ll-bundle-radio"></div>
+                <div>
+                  <div class="ll-bundle-title">3x LitterLoops™</div>
+                  <div class="ll-bundle-sub">Ultimate Multi-Cat Bundle ($83.32/ea)</div>
+                </div>
+              </div>
+              <div class="ll-bundle-right">
+                <div class="ll-bundle-price">$249.97</div>
+                <div class="ll-bundle-was">$449.97</div>
+                <span class="ll-bundle-save">Save $200</span>
+              </div>
+            </div>
+
+          </div>
+
           <form id="ll-hero-form" style="display:flex;flex-direction:column;gap:12px;">
             <input type="hidden" id="ll-vid" value="{{ vid }}">
             <div class="ll-cta-group">
               <button type="submit" class="btn btn-primary btn-lg" id="ll-hero-btn">
-                Order LitterLoops™ — $99.99
+                Order 1x LitterLoops™ — $99.99
               </button>
               <a href="#how-it-works" class="btn btn-ghost">
                 Watch How It Works
@@ -1489,20 +1544,34 @@ iframe.ll-video {
   var isRedirecting = false;
   var selectedQuantity = 1;
 
-  /* ── Bundle Selector Interactions ── */
+  /* ── Synchronized Bundle Selector Interactions ── */
   var bundleCards = document.querySelectorAll('.ll-bundle-card');
-  var offerBtn = document.getElementById('ll-offer-btn');
+  var heroBtn     = document.getElementById('ll-hero-btn');
+  var offerBtn    = document.getElementById('ll-offer-btn');
+
+  function setBundle(qty) {
+    selectedQuantity = parseInt(qty) || 1;
+    bundleCards.forEach(function(c) {
+      if (parseInt(c.dataset.qty) === selectedQuantity) {
+        c.classList.add('selected');
+      } else {
+        c.classList.remove('selected');
+      }
+    });
+
+    var targetCard = document.querySelector('.ll-bundle-card[data-qty="' + selectedQuantity + '"]');
+    if (targetCard) {
+      var price = targetCard.dataset.price || '99.99';
+      var savings = targetCard.dataset.savings || '50';
+      var label = 'Order ' + selectedQuantity + 'x LitterLoops™ — $' + price + ' (Save $' + savings + ')';
+      if (heroBtn)  heroBtn.textContent = label;
+      if (offerBtn) offerBtn.textContent = label;
+    }
+  }
 
   bundleCards.forEach(function(card) {
     card.addEventListener('click', function() {
-      bundleCards.forEach(function(c) { c.classList.remove('selected'); });
-      card.classList.add('selected');
-      selectedQuantity = parseInt(card.dataset.qty) || 1;
-      var price = card.dataset.price || '99.99';
-      var savings = card.dataset.savings || '50';
-      if (offerBtn) {
-        offerBtn.textContent = 'Order ' + selectedQuantity + 'x LitterLoops™ — $' + price + ' (Save $' + savings + ')';
-      }
+      setBundle(card.dataset.qty);
     });
   });
 
