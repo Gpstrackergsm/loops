@@ -804,8 +804,10 @@ iframe.ll-video {
 
           </div>
 
-          <form id="ll-hero-form" style="display:flex;flex-direction:column;gap:12px;">
-            <input type="hidden" id="ll-vid" value="{{ vid }}">
+          <form id="ll-hero-form" action="/cart/add" method="post" style="display:flex;flex-direction:column;gap:12px;">
+            <input type="hidden" name="id" id="ll-vid" value="{{ vid | default: 54675654803795 }}">
+            <input type="hidden" name="quantity" id="ll-hero-qty" value="1">
+            <input type="hidden" name="return_to" value="/checkout">
             <div class="ll-cta-group">
               <button type="submit" class="btn btn-primary btn-lg" id="ll-hero-btn">
                 Order 1x LitterLoops™ — $99.99
@@ -1410,7 +1412,10 @@ iframe.ll-video {
           100% Non-Electric · Whisper-Quiet · 30-Day Risk-Free Trial
         </div>
 
-        <form id="ll-offer-form">
+        <form id="ll-offer-form" action="/cart/add" method="post">
+          <input type="hidden" name="id" value="{{ vid | default: 54675654803795 }}">
+          <input type="hidden" name="quantity" id="ll-offer-qty" value="1">
+          <input type="hidden" name="return_to" value="/checkout">
           <button type="submit" class="btn btn-primary btn-full ll-direct-checkout" id="ll-offer-btn">
             Order 1x LitterLoops™ — $99.99
           </button>
@@ -1559,6 +1564,11 @@ iframe.ll-video {
       }
     });
 
+    var hQty = document.getElementById('ll-hero-qty');
+    var oQty = document.getElementById('ll-offer-qty');
+    if (hQty) hQty.value = selectedQuantity;
+    if (oQty) oQty.value = selectedQuantity;
+
     var targetCard = document.querySelector('.ll-bundle-card[data-qty="' + selectedQuantity + '"]');
     if (targetCard) {
       var price = targetCard.dataset.price || '99.99';
@@ -1593,8 +1603,31 @@ iframe.ll-video {
     var idEl = document.getElementById('ll-vid');
     var variantId = (idEl && idEl.value && parseInt(idEl.value) > 0) ? parseInt(idEl.value) : fallbackVariantId;
 
-    // Direct Shopify Cart Permalink: instantly creates cart and redirects to /checkout
-    window.location.href = '/cart/' + variantId + ':' + quantity;
+    // Standard native form submission with return_to=/checkout
+    var f = document.createElement('form');
+    f.method = 'POST';
+    f.action = '/cart/add';
+    
+    var inId = document.createElement('input');
+    inId.type = 'hidden';
+    inId.name = 'id';
+    inId.value = variantId;
+    f.appendChild(inId);
+
+    var inQty = document.createElement('input');
+    inQty.type = 'hidden';
+    inQty.name = 'quantity';
+    inQty.value = quantity;
+    f.appendChild(inQty);
+
+    var inRet = document.createElement('input');
+    inRet.type = 'hidden';
+    inRet.name = 'return_to';
+    inRet.value = '/checkout';
+    f.appendChild(inRet);
+
+    document.body.appendChild(f);
+    f.submit();
   }
 
   document.querySelectorAll('.ll-direct-checkout').forEach(function(button) {
