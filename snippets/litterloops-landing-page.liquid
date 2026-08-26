@@ -758,7 +758,7 @@ iframe.ll-video {
           <div class="ll-bundles" id="ll-hero-bundle-picker">
             
             <!-- TIER 1: 1 UNIT -->
-            <div class="ll-bundle-card selected" data-qty="1" data-price="99.99" data-savings="50">
+            <div class="ll-bundle-card selected" data-qty="1" data-price="99.99" data-savings="50" onclick="window.selectBundle(1)">
               <div class="ll-bundle-left">
                 <div class="ll-bundle-radio"></div>
                 <div>
@@ -774,7 +774,7 @@ iframe.ll-video {
             </div>
 
             <!-- TIER 2: 2 UNITS -->
-            <div class="ll-bundle-card" data-qty="2" data-price="169.99" data-savings="130">
+            <div class="ll-bundle-card" data-qty="2" data-price="169.99" data-savings="130" onclick="window.selectBundle(2)">
               <span class="ll-bundle-badge popular">Most Popular · 15% Off</span>
               <div class="ll-bundle-left">
                 <div class="ll-bundle-radio"></div>
@@ -791,7 +791,7 @@ iframe.ll-video {
             </div>
 
             <!-- TIER 3: 3 UNITS -->
-            <div class="ll-bundle-card" data-qty="3" data-price="209.98" data-savings="240">
+            <div class="ll-bundle-card" data-qty="3" data-price="209.98" data-savings="240" onclick="window.selectBundle(3)">
               <span class="ll-bundle-badge">Best Value · 30% Off</span>
               <div class="ll-bundle-left">
                 <div class="ll-bundle-radio"></div>
@@ -1362,7 +1362,7 @@ iframe.ll-video {
         <div class="ll-bundles" id="ll-bundle-picker">
           
           <!-- TIER 1: 1 UNIT -->
-          <div class="ll-bundle-card selected" data-qty="1" data-price="99.99" data-savings="50">
+          <div class="ll-bundle-card selected" data-qty="1" data-price="99.99" data-savings="50" onclick="window.selectBundle(1)">
             <div class="ll-bundle-left">
               <div class="ll-bundle-radio"></div>
               <div>
@@ -1378,7 +1378,7 @@ iframe.ll-video {
           </div>
 
           <!-- TIER 2: 2 UNITS -->
-          <div class="ll-bundle-card" data-qty="2" data-price="169.99" data-savings="130">
+          <div class="ll-bundle-card" data-qty="2" data-price="169.99" data-savings="130" onclick="window.selectBundle(2)">
             <span class="ll-bundle-badge popular">Most Popular · 15% Off</span>
             <div class="ll-bundle-left">
               <div class="ll-bundle-radio"></div>
@@ -1395,7 +1395,7 @@ iframe.ll-video {
           </div>
 
           <!-- TIER 3: 3 UNITS -->
-          <div class="ll-bundle-card" data-qty="3" data-price="209.98" data-savings="240">
+          <div class="ll-bundle-card" data-qty="3" data-price="209.98" data-savings="240" onclick="window.selectBundle(3)">
             <span class="ll-bundle-badge">Best Value · 30% Off</span>
             <div class="ll-bundle-left">
               <div class="ll-bundle-radio"></div>
@@ -1551,18 +1551,18 @@ iframe.ll-video {
 (function(){
   /* ── Universal Direct-to-Checkout ── */
   var fallbackVariantId = {{ vid | default: 54675654803795 }};
-  var isRedirecting = false;
   var selectedQuantity = 1;
 
   /* ── Synchronized Bundle Selector Interactions ── */
-  var bundleCards = document.querySelectorAll('.ll-bundle-card');
-  var heroBtn     = document.getElementById('ll-hero-btn');
-  var offerBtn    = document.getElementById('ll-offer-btn');
-
-  function setBundle(qty) {
+  window.selectBundle = function(qty) {
     selectedQuantity = parseInt(qty) || 1;
+    var bundleCards = document.querySelectorAll('.ll-bundle-card');
+    var heroBtn     = document.getElementById('ll-hero-btn');
+    var offerBtn    = document.getElementById('ll-offer-btn');
+
     bundleCards.forEach(function(c) {
-      if (parseInt(c.dataset.qty) === selectedQuantity) {
+      var cQty = parseInt(c.dataset.qty || c.getAttribute('data-qty'));
+      if (cQty === selectedQuantity) {
         c.classList.add('selected');
       } else {
         c.classList.remove('selected');
@@ -1582,20 +1582,17 @@ iframe.ll-video {
       if (heroBtn)  heroBtn.textContent = label;
       if (offerBtn) offerBtn.textContent = label;
     }
-  }
+  };
 
+  var bundleCards = document.querySelectorAll('.ll-bundle-card');
   bundleCards.forEach(function(card) {
-    function handleSelect(e) {
+    card.addEventListener('click', function(e) {
       var qty = card.getAttribute('data-qty') || card.dataset.qty;
-      setBundle(qty);
-    }
-    card.addEventListener('click', handleSelect);
+      window.selectBundle(qty);
+    });
   });
 
   function directToCheckout(btn, qty) {
-    if (isRedirecting) return;
-    isRedirecting = true;
-
     var quantity = qty || selectedQuantity || 1;
 
     if (btn) {
@@ -1610,30 +1607,8 @@ iframe.ll-video {
     var idEl = document.getElementById('ll-vid');
     var variantId = (idEl && idEl.value && parseInt(idEl.value) > 0) ? parseInt(idEl.value) : fallbackVariantId;
 
-    var targetCard = document.querySelector('.ll-bundle-card[data-qty="' + quantity + '"]');
-    var discountCode = targetCard ? (targetCard.dataset.discount || '') : '';
-    var checkoutUrl = '/checkout' + (discountCode ? '?discount=' + encodeURIComponent(discountCode) : '');
-    var permalinkUrl = '/cart/' + variantId + ':' + quantity + (discountCode ? '?discount=' + encodeURIComponent(discountCode) : '');
-
-    // Clear cart first, add selected quantity, then redirect to /checkout
-    fetch('/cart/clear.js', { method: 'POST' })
-      .then(function() {
-        return fetch('/cart/add.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ id: variantId, quantity: quantity })
-        });
-      })
-      .then(function(res) {
-        if (!res.ok) {
-          window.location.href = permalinkUrl;
-        } else {
-          window.location.href = checkoutUrl;
-        }
-      })
-      .catch(function(err) {
-        window.location.href = permalinkUrl;
-      });
+    // Instant direct redirect to Shopify Checkout via Cart Permalink (zero background network hang)
+    window.location.href = '/cart/' + variantId + ':' + quantity;
   }
 
   document.querySelectorAll('.ll-direct-checkout').forEach(function(button) {
