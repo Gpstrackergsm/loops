@@ -55,7 +55,7 @@
 
 /* ─── RESET ──────────────────────────────────── */
 .ll * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
-.ll { font-family: var(--fb); color: var(--ink-soft); background: var(--surface); line-height: 1.6; overflow-x: hidden; }
+.ll { font-family: var(--fb); color: var(--ink-soft); background: var(--surface); line-height: 1.6; overflow-x: hidden; width: 100%; max-width: 100vw; position: relative; }
 img { display: block; max-width: 100%; }
 a { text-decoration: none; }
 
@@ -197,7 +197,7 @@ a { text-decoration: none; }
 /* ─── SOCIAL PROOF STRIP ─────────────────────── */
 .ll-social-strip {
   background: #fff; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-  padding: 18px 0; overflow: hidden;
+  padding: 18px 0; overflow: hidden; width: 100%; max-width: 100vw; position: relative;
 }
 .ll-social-track {
   display: flex; gap: 32px; align-items: center;
