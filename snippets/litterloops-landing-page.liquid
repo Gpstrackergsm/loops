@@ -1594,22 +1594,31 @@ iframe.ll-video {
 
   function directToCheckout(btn, qty) {
     var quantity = qty || selectedQuantity || 1;
-
-    if (btn) {
-      btn.disabled = true;
-      btn.textContent = 'Redirecting to checkout…';
-    }
-    document.querySelectorAll('.ll-direct-checkout, #ll-hero-btn, #ll-offer-btn').forEach(function(b) {
-      b.disabled = true;
-      b.textContent = 'Redirecting to checkout…';
-    });
-
     var idEl = document.getElementById('ll-vid');
     var variantId = (idEl && idEl.value && parseInt(idEl.value) > 0) ? parseInt(idEl.value) : fallbackVariantId;
 
-    // Instant direct redirect to Shopify Checkout via Cart Permalink (zero background network hang)
+    if (btn) {
+      btn.textContent = 'Redirecting to checkout…';
+    }
+
+    // Auto-restore button text after navigation
+    setTimeout(function() {
+      if (window.selectBundle) window.selectBundle(quantity);
+    }, 2000);
+
+    // Instant direct redirect to Shopify Checkout via Cart Permalink
     window.location.href = '/cart/' + variantId + ':' + quantity;
   }
+
+  // Restore button state instantly when returning via browser back button
+  window.addEventListener('pageshow', function() {
+    document.querySelectorAll('.ll-direct-checkout, #ll-hero-btn, #ll-offer-btn').forEach(function(b) {
+      b.disabled = false;
+    });
+    if (window.selectBundle) {
+      window.selectBundle(selectedQuantity || 1);
+    }
+  });
 
   document.querySelectorAll('.ll-direct-checkout').forEach(function(button) {
     button.addEventListener('click', function(e) {
