@@ -541,6 +541,18 @@ iframe.ll-video {
   font-size: .72rem; font-weight: 700; color: var(--green); background: var(--green-bg);
   padding: 1px 6px; border-radius: var(--rpill); display: inline-block; margin-top: 2px;
 }
+.ll-header-actions { display: flex; align-items: center; gap: 12px; }
+.ll-header-bag {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  color: var(--ink); padding: 8px; border-radius: 50%; transition: all .15s ease;
+  text-decoration: none; cursor: pointer; background: transparent; border: none;
+}
+.ll-header-bag:hover { color: var(--brand); background: var(--wash); }
+.ll-bag-count {
+  position: absolute; top: -2px; right: -2px; background: var(--brand); color: #fff;
+  font-family: var(--fh); font-size: .68rem; font-weight: 800; width: 18px; height: 18px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
 </style>
 
 <div class="ll">
@@ -561,9 +573,19 @@ iframe.ll-video {
           <a href="#vs-robot">vs. Litter Robot</a>
           <a href="#offer">Get Yours</a>
         </nav>
-        <button type="button" class="btn btn-primary ll-direct-checkout" style="padding:10px 22px;font-size:.88rem;">
-          Get LitterLoops™ — $99.99
-        </button>
+        <div class="ll-header-actions">
+          <button type="button" class="btn btn-primary ll-direct-checkout" style="padding:10px 22px;font-size:.88rem;">
+            Get LitterLoops™ — $99.99
+          </button>
+          <button type="button" class="ll-header-bag ll-direct-checkout" aria-label="Shopping Bag" title="Proceed to Checkout">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span class="ll-bag-count" id="ll-bag-count">1</span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -1582,6 +1604,9 @@ iframe.ll-video {
       if (heroBtn)  heroBtn.textContent = label;
       if (offerBtn) offerBtn.textContent = label;
     }
+
+    var bagCount = document.getElementById('ll-bag-count');
+    if (bagCount) bagCount.textContent = selectedQuantity;
   };
 
   var bundleCards = document.querySelectorAll('.ll-bundle-card');
@@ -1626,6 +1651,15 @@ iframe.ll-video {
       directToCheckout(button);
     });
   });
+
+  // Global interceptor for any floating or external cart/bag icon clicks
+  document.addEventListener('click', function(e) {
+    var cartTarget = e.target.closest('a[href*="/cart"], [id*="cart"], [class*="cart"], [class*="bag"], [id*="bag"]');
+    if (cartTarget && !cartTarget.classList.contains('ll-bundle-card') && !cartTarget.classList.contains('ll-direct-checkout')) {
+      e.preventDefault();
+      directToCheckout(null, selectedQuantity);
+    }
+  }, true);
 
   function bindForm(fid, bid) {
     var f = document.getElementById(fid), b = document.getElementById(bid);
