@@ -494,13 +494,48 @@ iframe.ll-video {
   align-items: center; text-align: center; max-width: 720px; margin: 0 auto 40px;
   box-shadow: var(--sh2);
 }
-.ll-guarantee-badge {
-  width: 56px; height: 56px; border-radius: 50%;
-  background: var(--brand); color: #fff; display: flex; align-items: center;
-  justify-content: center; font-size: 1.8rem; box-shadow: 0 4px 14px rgba(10,124,113,.3);
+/* ─── BUNDLE SELECTOR ────────────────────────── */
+.ll-bundles {
+  display: flex; flex-direction: column; gap: 10px; margin: 18px 0; width: 100%; text-align: left;
 }
-.ll-guarantee h3 { font-size: 1.35rem; }
-.ll-guarantee p { font-size: .95rem; color: var(--muted); max-width: 560px; line-height: 1.65; }
+.ll-bundle-card {
+  position: relative; background: #fff; border: 2px solid var(--line); border-radius: var(--r2);
+  padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  cursor: pointer; transition: all .15s ease; user-select: none;
+}
+.ll-bundle-card:hover {
+  border-color: var(--brand-bd); background: var(--wash);
+}
+.ll-bundle-card.selected {
+  border-color: var(--brand); background: var(--brand-lt);
+  box-shadow: 0 2px 8px rgba(10,124,113,.12);
+}
+.ll-bundle-badge {
+  position: absolute; top: -10px; right: 14px; background: var(--brand); color: #fff;
+  font-family: var(--fh); font-size: .68rem; font-weight: 800; letter-spacing: .05em;
+  text-transform: uppercase; padding: 2px 8px; border-radius: var(--rpill);
+}
+.ll-bundle-badge.popular { background: #d97706; }
+.ll-bundle-left { display: flex; align-items: center; gap: 12px; }
+.ll-bundle-radio {
+  width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--subtle);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  transition: border-color .15s;
+}
+.ll-bundle-card.selected .ll-bundle-radio { border-color: var(--brand); }
+.ll-bundle-radio::after {
+  content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--brand); display: none;
+}
+.ll-bundle-card.selected .ll-bundle-radio::after { display: block; }
+.ll-bundle-title { font-family: var(--fh); font-size: .95rem; font-weight: 800; color: var(--ink); line-height: 1.2; }
+.ll-bundle-sub { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+.ll-bundle-right { text-align: right; flex-shrink: 0; }
+.ll-bundle-price { font-family: var(--fh); font-size: 1.15rem; font-weight: 900; color: var(--ink); }
+.ll-bundle-was { font-size: .8rem; color: var(--subtle); text-decoration: line-through; }
+.ll-bundle-save {
+  font-size: .72rem; font-weight: 700; color: var(--green); background: var(--green-bg);
+  padding: 1px 6px; border-radius: var(--rpill); display: inline-block; margin-top: 2px;
+}
 </style>
 
 <div class="ll">
@@ -1257,21 +1292,75 @@ iframe.ll-video {
       </div>
 
       <div class="ll-offer">
-        <div class="ll-tag" style="margin:0 auto 12px;">Launch Offer — Save $50</div>
+        <div class="ll-tag" style="margin:0 auto 12px;">Launch Special — Choose Your Bundle</div>
         <div class="ll-offer-name">LitterLoops™</div>
         <div class="ll-offer-desc">Non-Electric Self-Cleaning Cat Litter Box</div>
-        <div class="ll-offer-row">
-          <span class="ll-offer-price">$99.99</span>
-          <span class="ll-offer-was">$149.99</span>
+
+        <!-- BUNDLE SELECTOR TIERS -->
+        <div class="ll-bundles" id="ll-bundle-picker">
+          
+          <!-- TIER 1: 1 UNIT -->
+          <div class="ll-bundle-card selected" data-qty="1" data-price="99.99" data-savings="50">
+            <div class="ll-bundle-left">
+              <div class="ll-bundle-radio"></div>
+              <div>
+                <div class="ll-bundle-title">1x LitterLoops™</div>
+                <div class="ll-bundle-sub">Single Cat Starter Pack</div>
+              </div>
+            </div>
+            <div class="ll-bundle-right">
+              <div class="ll-bundle-price">$99.99</div>
+              <div class="ll-bundle-was">$149.99</div>
+              <span class="ll-bundle-save">Save $50</span>
+            </div>
+          </div>
+
+          <!-- TIER 2: 2 UNITS -->
+          <div class="ll-bundle-card" data-qty="2" data-price="179.98" data-savings="120">
+            <span class="ll-bundle-badge popular">Most Popular</span>
+            <div class="ll-bundle-left">
+              <div class="ll-bundle-radio"></div>
+              <div>
+                <div class="ll-bundle-title">2x LitterLoops™</div>
+                <div class="ll-bundle-sub">Multi-Cat / 2-Floor Home ($89.99/ea)</div>
+              </div>
+            </div>
+            <div class="ll-bundle-right">
+              <div class="ll-bundle-price">$179.98</div>
+              <div class="ll-bundle-was">$299.98</div>
+              <span class="ll-bundle-save">Save $120</span>
+            </div>
+          </div>
+
+          <!-- TIER 3: 3 UNITS -->
+          <div class="ll-bundle-card" data-qty="3" data-price="249.97" data-savings="200">
+            <span class="ll-bundle-badge">Best Value</span>
+            <div class="ll-bundle-left">
+              <div class="ll-bundle-radio"></div>
+              <div>
+                <div class="ll-bundle-title">3x LitterLoops™</div>
+                <div class="ll-bundle-sub">Ultimate Multi-Cat Bundle ($83.32/ea)</div>
+              </div>
+            </div>
+            <div class="ll-bundle-right">
+              <div class="ll-bundle-price">$249.97</div>
+              <div class="ll-bundle-was">$449.97</div>
+              <span class="ll-bundle-save">Save $200</span>
+            </div>
+          </div>
+
         </div>
-        <div class="ll-offer-note">
+
+        <div class="ll-offer-note" id="ll-bundle-note">
           100% Non-Electric · Whisper-Quiet · 30-Day Risk-Free Trial
         </div>
+
         <form id="ll-offer-form">
-          <button type="submit" class="btn btn-primary btn-full" id="ll-offer-btn">
-            Order LitterLoops™ — $99.99
+          <button type="submit" class="btn btn-primary btn-full ll-direct-checkout" id="ll-offer-btn">
+            Order 1x LitterLoops™ — $99.99
           </button>
         </form>
+
         <div class="ll-trust-pills">
           <span class="ll-trust-pill">🛡️ 30-Day Trial</span>
           <span class="ll-trust-pill">🔒 Secure Checkout</span>
@@ -1398,10 +1487,30 @@ iframe.ll-video {
   /* ── Universal Direct-to-Checkout ── */
   var fallbackVariantId = {{ vid | default: 54675654803795 }};
   var isRedirecting = false;
+  var selectedQuantity = 1;
 
-  function directToCheckout(btn) {
+  /* ── Bundle Selector Interactions ── */
+  var bundleCards = document.querySelectorAll('.ll-bundle-card');
+  var offerBtn = document.getElementById('ll-offer-btn');
+
+  bundleCards.forEach(function(card) {
+    card.addEventListener('click', function() {
+      bundleCards.forEach(function(c) { c.classList.remove('selected'); });
+      card.classList.add('selected');
+      selectedQuantity = parseInt(card.dataset.qty) || 1;
+      var price = card.dataset.price || '99.99';
+      var savings = card.dataset.savings || '50';
+      if (offerBtn) {
+        offerBtn.textContent = 'Order ' + selectedQuantity + 'x LitterLoops™ — $' + price + ' (Save $' + savings + ')';
+      }
+    });
+  });
+
+  function directToCheckout(btn, qty) {
     if (isRedirecting) return;
     isRedirecting = true;
+
+    var quantity = qty || selectedQuantity || 1;
 
     if (btn) {
       btn.disabled = true;
@@ -1420,7 +1529,7 @@ iframe.ll-video {
         return fetch('/cart/add.js', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: variantId, quantity: 1 })
+          body: JSON.stringify({ id: variantId, quantity: quantity })
         });
       })
       .then(function() {
