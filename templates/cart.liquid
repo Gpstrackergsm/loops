@@ -1,44 +1,151 @@
 {% layout 'theme' %}
 
 {% if cart.item_count > 0 %}
-  <style>
-    .ll-cart-wrap { max-width: 560px; margin: 60px auto; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-    .ll-cart-title { font-size: 1.5rem; font-weight: 800; color: #0f2a1f; margin-bottom: 24px; }
-    .ll-cart-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid #e5e7eb; }
-    .ll-cart-name { font-weight: 700; color: #0f2a1f; }
-    .ll-cart-qty { color: #6b7280; font-size: .9rem; margin-top: 4px; }
-    .ll-cart-price { font-size: 1.2rem; font-weight: 900; color: #0f2a1f; }
-    .ll-cart-checkout {
-      display: block; width: 100%; padding: 16px; margin-top: 24px;
-      background: #0d9488; color: #fff; font-weight: 800; font-size: 1.05rem;
-      border: none; border-radius: 999px; cursor: pointer; text-align: center;
-      text-decoration: none;
-    }
-    .ll-cart-checkout:hover { background: #0a7a6f; }
-    .ll-cart-back { display: block; text-align: center; margin-top: 12px; color: #6b7280; font-size: .88rem; text-decoration: underline; }
-  </style>
-  <div class="ll-cart-wrap">
-    <div class="ll-cart-title">🛍️ Your Order</div>
+<style>
+  * { box-sizing: border-box; }
+  body { background: #f9fafb; }
+  .ll-cart-wrap {
+    max-width: 560px; margin: 40px auto; padding: 24px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  .ll-cart-title { font-size: 1.4rem; font-weight: 800; color: #0f2a1f; margin-bottom: 20px; }
+  .ll-cart-box {
+    background: #fff; border-radius: 16px; padding: 20px; 
+    box-shadow: 0 1px 8px rgba(0,0,0,.08); margin-bottom: 16px;
+  }
+  .ll-cart-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .ll-cart-name { font-weight: 700; color: #0f2a1f; font-size: .95rem; margin-bottom: 12px; }
+  .ll-cart-price { font-size: 1.15rem; font-weight: 900; color: #0f2a1f; white-space: nowrap; }
+  .ll-qty-row { display: flex; align-items: center; gap: 0; }
+  .ll-qty-btn {
+    width: 32px; height: 32px; border: 2px solid #d1d5db; background: #fff;
+    font-size: 1.1rem; font-weight: 700; cursor: pointer; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; color: #374151;
+    transition: all .15s;
+  }
+  .ll-qty-btn:hover { border-color: #0d9488; color: #0d9488; }
+  .ll-qty-num {
+    width: 40px; height: 32px; border: 2px solid #d1d5db; border-left: none; border-right: none;
+    text-align: center; font-weight: 700; font-size: .95rem; background: #f9fafb;
+    -webkit-appearance: none; -moz-appearance: textfield;
+  }
+  .ll-qty-num:focus { outline: none; }
+  .ll-remove-btn {
+    background: none; border: none; color: #ef4444; font-size: .8rem; 
+    cursor: pointer; margin-top: 8px; padding: 0; text-decoration: underline;
+  }
+  .ll-cart-summary { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 1px 8px rgba(0,0,0,.08); }
+  .ll-summary-row { display: flex; justify-content: space-between; padding: 6px 0; font-size: .9rem; color: #374151; }
+  .ll-summary-total { display: flex; justify-content: space-between; padding: 12px 0 0; border-top: 2px solid #e5e7eb; margin-top: 8px; font-weight: 800; font-size: 1.1rem; color: #0f2a1f; }
+  .ll-checkout-btn {
+    display: block; width: 100%; padding: 16px; margin-top: 16px;
+    background: #0d9488; color: #fff; font-weight: 800; font-size: 1.05rem;
+    border: none; border-radius: 999px; cursor: pointer; text-align: center;
+    text-decoration: none; transition: background .15s;
+  }
+  .ll-checkout-btn:hover { background: #0a7a6f; }
+  .ll-back { display: block; text-align: center; margin-top: 12px; color: #6b7280; font-size: .85rem; text-decoration: underline; }
+</style>
+
+<div class="ll-cart-wrap">
+  <div class="ll-cart-title">🛍️ Your Order</div>
+
+  <form action="/cart" method="post" id="ll-cart-form">
+    <input type="hidden" name="updates[__placeholder]" value="0">
     {% for item in cart.items %}
+    <div class="ll-cart-box">
       <div class="ll-cart-item">
-        <div>
+        <div style="flex:1">
           <div class="ll-cart-name">{{ item.title }}</div>
-          <div class="ll-cart-qty">Quantity: {{ item.quantity }}</div>
+          <div class="ll-qty-row">
+            <button type="button" class="ll-qty-btn ll-qty-minus" data-key="{{ item.key }}">−</button>
+            <input class="ll-qty-num" type="number" name="updates[{{ item.key }}]" value="{{ item.quantity }}" min="1" max="10" data-key="{{ item.key }}">
+            <button type="button" class="ll-qty-btn ll-qty-plus" data-key="{{ item.key }}">+</button>
+          </div>
+          <button type="button" class="ll-remove-btn" data-key="{{ item.key }}">Remove</button>
         </div>
         <div class="ll-cart-price">{{ item.final_line_price | money }}</div>
       </div>
+    </div>
     {% endfor %}
-    <a href="/checkout" class="ll-cart-checkout">Proceed to Checkout →</a>
-    <a href="/" class="ll-cart-back">← Back to store</a>
-  </div>
+
+    <div class="ll-cart-summary">
+      <div class="ll-summary-row"><span>Subtotal</span><span>{{ cart.original_total_price | money }}</span></div>
+      {% if cart.total_discount > 0 %}
+      <div class="ll-summary-row" style="color:#0d9488;"><span>Discount</span><span>−{{ cart.total_discount | money }}</span></div>
+      {% endif %}
+      <div class="ll-summary-total"><span>Total</span><span>{{ cart.total_price | money }}</span></div>
+    </div>
+
+    <button type="button" onclick="window.location.href='/checkout'" class="ll-checkout-btn">
+      Proceed to Checkout →
+    </button>
+  </form>
+
+  <a href="/" class="ll-back">← Change your bundle</a>
+</div>
+
+<script>
+(function() {
+  function updateQtyDisplay(key, newQty) {
+    var input = document.querySelector('input[data-key="' + key + '"]');
+    if (input) input.value = newQty;
+  }
+
+  function changeQty(key, delta) {
+    var input = document.querySelector('input[data-key="' + key + '"]');
+    if (!input) return;
+    var currentQty = parseInt(input.value) || 1;
+    var newQty = Math.max(1, currentQty + delta);
+    input.value = newQty;
+    updateCart(key, newQty);
+  }
+
+  function removeItem(key) {
+    updateCart(key, 0);
+  }
+
+  function updateCart(key, qty) {
+    var updates = {};
+    updates[key] = qty;
+    fetch('/cart/update.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ updates: updates })
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(cart) {
+      if (cart.item_count === 0) {
+        window.location.href = '/';
+      } else {
+        window.location.reload();
+      }
+    })
+    .catch(function() { window.location.reload(); });
+  }
+
+  document.querySelectorAll('.ll-qty-minus').forEach(function(btn) {
+    btn.addEventListener('click', function() { changeQty(this.dataset.key, -1); });
+  });
+  document.querySelectorAll('.ll-qty-plus').forEach(function(btn) {
+    btn.addEventListener('click', function() { changeQty(this.dataset.key, 1); });
+  });
+  document.querySelectorAll('.ll-remove-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() { removeItem(this.dataset.key); });
+  });
+  document.querySelectorAll('.ll-qty-num').forEach(function(input) {
+    input.addEventListener('change', function() {
+      var qty = parseInt(this.value) || 1;
+      updateCart(this.dataset.key, qty);
+    });
+  });
+})();
+</script>
 
 {% else %}
-  <script>
-    // Cart is empty — send back to landing page
-    window.location.replace('/');
-  </script>
-  <div style="text-align:center; padding: 100px 20px; font-family: sans-serif;">
+  <script>window.location.replace('/');</script>
+  <div style="text-align:center;padding:100px 20px;font-family:sans-serif;">
     <h2>Your cart is empty</h2>
-    <p><a href="/" style="color:#0d9488;">← Go back to choose your bundle</a></p>
+    <p><a href="/" style="color:#0d9488;">← Choose your bundle</a></p>
   </div>
 {% endif %}

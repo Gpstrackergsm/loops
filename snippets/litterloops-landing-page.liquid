@@ -1619,28 +1619,45 @@ iframe.ll-video {
 
   function goToCheckout(qty) {
     var quantity = qty || selectedQuantity || 1;
-    // Read variantId at click time so it's always fresh
     var vidEl = document.getElementById('ll-vid');
     var vid = (vidEl && parseInt(vidEl.value) > 0) ? parseInt(vidEl.value) : fallbackVariantId;
 
-    // AJAX: add selected quantity → redirect to /checkout
-    // (skip cart/clear to avoid rate-limit 429 errors)
-    fetch('/cart/add.js', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify({ id: vid, quantity: quantity })
-    })
-    .then(function(res) {
-      if (res.ok) {
+    // Step 1: Get current cart to find the item key (if already in cart)
+    // Step 2: Use /cart/update.js to SET exact quantity (no accumulation)
+    // Step 3: If item not in cart, add it first then redirect
+    fetch('/cart.js')
+      .then(function(r) { return r.json(); })
+      .then(function(cart) {
+        var existingItem = null;
+        for (var i = 0; i < cart.items.length; i++) {
+          if (cart.items[i].variant_id == vid) {
+            existingItem = cart.items[i];
+            break;
+          }
+        }
+        if (existingItem) {
+          // SET exact quantity (not add to existing)
+          var updates = {};
+          updates[existingItem.key] = quantity;
+          return fetch('/cart/update.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ updates: updates })
+          });
+        } else {
+          return fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({ id: vid, quantity: quantity })
+          });
+        }
+      })
+      .then(function() {
         window.location.replace('/checkout');
-      } else {
-        // Fallback via cart permalink — cart.liquid will show the items and checkout button
+      })
+      .catch(function() {
         window.location.href = '/cart/' + vid + ':' + quantity;
-      }
-    })
-    .catch(function() {
-      window.location.href = '/cart/' + vid + ':' + quantity;
-    });
+      });
   }
 
   // All checkout buttons (header, hero, offer, sticky, bag) — never disabled
