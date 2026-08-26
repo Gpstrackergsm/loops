@@ -1617,31 +1617,54 @@ iframe.ll-video {
     });
   });
 
-  function triggerCheckout() {
-    var heroForm = document.getElementById('ll-hero-form');
-    if (heroForm) {
-      heroForm.submit();
-    } else {
-      window.location.href = '/cart/' + fallbackVariantId + ':' + selectedQuantity;
-    }
+  var variantId = parseInt(document.getElementById('ll-vid') && document.getElementById('ll-vid').value) || fallbackVariantId;
+
+  function goToCheckout(qty) {
+    var quantity = qty || selectedQuantity || 1;
+    // AJAX: clear cart → add selected quantity → redirect to /checkout
+    fetch('/cart/clear.js', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
+      .then(function() {
+        return fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ id: variantId, quantity: quantity })
+        });
+      })
+      .then(function(res) {
+        // Always redirect to /checkout after adding to cart
+        window.location.replace('/checkout');
+      })
+      .catch(function() {
+        // Fallback: go directly via cart permalink
+        window.location.href = '/cart/' + variantId + ':' + quantity;
+      });
   }
 
-  // Standalone buttons trigger native form submission
-  document.querySelectorAll('.ll-direct-checkout').forEach(function(button) {
-    if (button.id !== 'll-hero-btn' && button.id !== 'll-offer-btn') {
-      button.addEventListener('click', function(e) {
+  // All checkout buttons (header, hero, offer, sticky, bag) — never disabled
+  document.querySelectorAll('.ll-direct-checkout, #ll-hero-btn, #ll-offer-btn').forEach(function(button) {
+    button.addEventListener('click', function(e) {
+      e.preventDefault();
+      goToCheckout(selectedQuantity);
+    });
+  });
+
+  // Hero and offer forms
+  ['ll-hero-form', 'll-offer-form'].forEach(function(fid) {
+    var f = document.getElementById(fid);
+    if (f) {
+      f.addEventListener('submit', function(e) {
         e.preventDefault();
-        triggerCheckout();
+        goToCheckout(selectedQuantity);
       });
     }
   });
 
-  // Global interceptor for floating cart/bag icon clicks
+  // Global interceptor for any other cart/bag clicks
   document.addEventListener('click', function(e) {
     var cartTarget = e.target.closest('a[href*="/cart"], [id*="cart"], [class*="cart"], [class*="bag"], [id*="bag"]');
-    if (cartTarget && !cartTarget.classList.contains('ll-bundle-card') && !cartTarget.classList.contains('ll-direct-checkout')) {
+    if (cartTarget && !cartTarget.classList.contains('ll-bundle-card')) {
       e.preventDefault();
-      triggerCheckout();
+      goToCheckout(selectedQuantity);
     }
   }, true);
 
