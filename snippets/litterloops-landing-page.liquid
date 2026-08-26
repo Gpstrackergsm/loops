@@ -502,6 +502,11 @@ iframe.ll-video {
   position: relative; background: #fff; border: 2px solid var(--line); border-radius: var(--r2);
   padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px;
   cursor: pointer; transition: all .15s ease; user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.ll-bundle-card * {
+  pointer-events: none;
 }
 .ll-bundle-card:hover {
   border-color: var(--brand-bd); background: var(--wash);
@@ -1580,9 +1585,11 @@ iframe.ll-video {
   }
 
   bundleCards.forEach(function(card) {
-    card.addEventListener('click', function() {
-      setBundle(card.dataset.qty);
-    });
+    function handleSelect(e) {
+      var qty = card.getAttribute('data-qty') || card.dataset.qty;
+      setBundle(qty);
+    }
+    card.addEventListener('click', handleSelect);
   });
 
   function directToCheckout(btn, qty) {
@@ -1603,31 +1610,26 @@ iframe.ll-video {
     var idEl = document.getElementById('ll-vid');
     var variantId = (idEl && idEl.value && parseInt(idEl.value) > 0) ? parseInt(idEl.value) : fallbackVariantId;
 
-    // Standard native form submission with return_to=/checkout
-    var f = document.createElement('form');
-    f.method = 'POST';
-    f.action = '/cart/add';
-    
-    var inId = document.createElement('input');
-    inId.type = 'hidden';
-    inId.name = 'id';
-    inId.value = variantId;
-    f.appendChild(inId);
-
-    var inQty = document.createElement('input');
-    inQty.type = 'hidden';
-    inQty.name = 'quantity';
-    inQty.value = quantity;
-    f.appendChild(inQty);
-
-    var inRet = document.createElement('input');
-    inRet.type = 'hidden';
-    inRet.name = 'return_to';
-    inRet.value = '/checkout';
-    f.appendChild(inRet);
-
-    document.body.appendChild(f);
-    f.submit();
+    // Clear cart first, add selected quantity, then redirect to /checkout
+    fetch('/cart/clear.js', { method: 'POST' })
+      .then(function() {
+        return fetch('/cart/add.js', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({ id: variantId, quantity: quantity })
+        });
+      })
+      .then(function(res) {
+        if (!res.ok) {
+          // If AJAX returned error, fallback to native permalink
+          window.location.href = '/cart/' + variantId + ':' + quantity;
+        } else {
+          window.location.href = '/checkout';
+        }
+      })
+      .catch(function(err) {
+        window.location.href = '/cart/' + variantId + ':' + quantity;
+      });
   }
 
   document.querySelectorAll('.ll-direct-checkout').forEach(function(button) {
