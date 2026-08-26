@@ -35,7 +35,54 @@
         margin: 0;
         padding: 0;
       }
+      /* Hide Shopify's floating Shop app cart bubble — we handle checkout directly */
+      shopify-section[id*="cart"],
+      #shopify-section-cart-notification,
+      #cart-notification,
+      .shopify-section-cart,
+      shop-cart,
+      shopify-accelerated-checkout-cart,
+      #CartCount,
+      .cart-count-bubble,
+      .CartCount {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
     </style>
+
+    <!-- Intercept Shopify Shop app floating cart bubble (Shadow DOM can't be caught with addEventListener) -->
+    <script>
+      // Poll for the Shop app cart element and hide it + redirect clicks to checkout
+      (function() {
+        function hideShopCart() {
+          var selectors = [
+            'shop-cart',
+            'shopify-accelerated-checkout-cart',
+            '[id*="cart-bubble"]',
+            '[class*="cart-bubble"]',
+            '[id*="CartBubble"]',
+            '[class*="CartBubble"]'
+          ];
+          selectors.forEach(function(sel) {
+            document.querySelectorAll(sel).forEach(function(el) {
+              el.style.cssText = 'display:none!important;visibility:hidden!important;pointer-events:none!important;';
+              el.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+                window.location.href = '/cart';
+              }, true);
+            });
+          });
+        }
+        // Run on load and watch for dynamic injection
+        document.addEventListener('DOMContentLoaded', hideShopCart);
+        var obs = new MutationObserver(hideShopCart);
+        document.addEventListener('DOMContentLoaded', function() {
+          obs.observe(document.body, { childList: true, subtree: true });
+        });
+      })();
+    </script>
   </head>
 
   <body>
