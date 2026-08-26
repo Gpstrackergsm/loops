@@ -1593,21 +1593,8 @@ iframe.ll-video {
     var idEl = document.getElementById('ll-vid');
     var variantId = (idEl && idEl.value && parseInt(idEl.value) > 0) ? parseInt(idEl.value) : fallbackVariantId;
 
-    fetch('/cart/clear.js', { method: 'POST' })
-      .then(function() {
-        return fetch('/cart/add.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id: variantId, quantity: quantity })
-        });
-      })
-      .then(function() {
-        window.location.href = '/checkout';
-      })
-      .catch(function(err) {
-        console.error('Checkout error:', err);
-        window.location.href = '/checkout';
-      });
+    // Direct Shopify Cart Permalink: instantly creates cart and redirects to /checkout
+    window.location.href = '/cart/' + variantId + ':' + quantity;
   }
 
   document.querySelectorAll('.ll-direct-checkout').forEach(function(button) {
