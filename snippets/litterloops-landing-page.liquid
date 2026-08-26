@@ -1617,27 +1617,30 @@ iframe.ll-video {
     });
   });
 
-  var variantId = parseInt(document.getElementById('ll-vid') && document.getElementById('ll-vid').value) || fallbackVariantId;
-
   function goToCheckout(qty) {
     var quantity = qty || selectedQuantity || 1;
-    // AJAX: clear cart → add selected quantity → redirect to /checkout
-    fetch('/cart/clear.js', { method: 'POST', headers: { 'Content-Type': 'application/json' } })
-      .then(function() {
-        return fetch('/cart/add.js', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify({ id: variantId, quantity: quantity })
-        });
-      })
-      .then(function(res) {
-        // Always redirect to /checkout after adding to cart
+    // Read variantId at click time so it's always fresh
+    var vidEl = document.getElementById('ll-vid');
+    var vid = (vidEl && parseInt(vidEl.value) > 0) ? parseInt(vidEl.value) : fallbackVariantId;
+
+    // AJAX: add selected quantity → redirect to /checkout
+    // (skip cart/clear to avoid rate-limit 429 errors)
+    fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ id: vid, quantity: quantity })
+    })
+    .then(function(res) {
+      if (res.ok) {
         window.location.replace('/checkout');
-      })
-      .catch(function() {
-        // Fallback: go directly via cart permalink
-        window.location.href = '/cart/' + variantId + ':' + quantity;
-      });
+      } else {
+        // Fallback via cart permalink — cart.liquid will show the items and checkout button
+        window.location.href = '/cart/' + vid + ':' + quantity;
+      }
+    })
+    .catch(function() {
+      window.location.href = '/cart/' + vid + ':' + quantity;
+    });
   }
 
   // All checkout buttons (header, hero, offer, sticky, bag) — never disabled
