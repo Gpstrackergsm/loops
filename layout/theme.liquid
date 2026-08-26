@@ -31,9 +31,22 @@
     {{ content_for_header }}
 
     <style>
-      body {
+      *, *::before, *::after {
+        box-sizing: border-box;
+      }
+      html, body {
         margin: 0;
         padding: 0;
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+        position: relative;
+        -webkit-text-size-adjust: 100%;
+      }
+      main#MainContent {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
       }
       /* Hide Shopify's floating Shop app cart bubble — we handle checkout directly */
       shopify-section[id*="cart"],
