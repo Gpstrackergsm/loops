@@ -1617,60 +1617,33 @@ iframe.ll-video {
     });
   });
 
-  function directToCheckout(btn, qty) {
-    var quantity = qty || selectedQuantity || 1;
-    var idEl = document.getElementById('ll-vid');
-    var variantId = (idEl && idEl.value && parseInt(idEl.value) > 0) ? parseInt(idEl.value) : fallbackVariantId;
-
-    if (btn) {
-      btn.textContent = 'Redirecting to checkout…';
+  function triggerCheckout() {
+    var heroForm = document.getElementById('ll-hero-form');
+    if (heroForm) {
+      heroForm.submit();
+    } else {
+      window.location.href = '/cart/' + fallbackVariantId + ':' + selectedQuantity;
     }
-
-    // Auto-restore button text after navigation
-    setTimeout(function() {
-      if (window.selectBundle) window.selectBundle(quantity);
-    }, 2000);
-
-    // Instant direct redirect to Shopify Checkout via Cart Permalink
-    window.location.href = '/cart/' + variantId + ':' + quantity;
   }
 
-  // Restore button state instantly when returning via browser back button
-  window.addEventListener('pageshow', function() {
-    document.querySelectorAll('.ll-direct-checkout, #ll-hero-btn, #ll-offer-btn').forEach(function(b) {
-      b.disabled = false;
-    });
-    if (window.selectBundle) {
-      window.selectBundle(selectedQuantity || 1);
+  // Standalone buttons trigger native form submission
+  document.querySelectorAll('.ll-direct-checkout').forEach(function(button) {
+    if (button.id !== 'll-hero-btn' && button.id !== 'll-offer-btn') {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        triggerCheckout();
+      });
     }
   });
 
-  document.querySelectorAll('.ll-direct-checkout').forEach(function(button) {
-    button.addEventListener('click', function(e) {
-      e.preventDefault();
-      directToCheckout(button);
-    });
-  });
-
-  // Global interceptor for any floating or external cart/bag icon clicks
+  // Global interceptor for floating cart/bag icon clicks
   document.addEventListener('click', function(e) {
     var cartTarget = e.target.closest('a[href*="/cart"], [id*="cart"], [class*="cart"], [class*="bag"], [id*="bag"]');
     if (cartTarget && !cartTarget.classList.contains('ll-bundle-card') && !cartTarget.classList.contains('ll-direct-checkout')) {
       e.preventDefault();
-      directToCheckout(null, selectedQuantity);
+      triggerCheckout();
     }
   }, true);
-
-  function bindForm(fid, bid) {
-    var f = document.getElementById(fid), b = document.getElementById(bid);
-    if (!f) return;
-    f.addEventListener('submit', function(e) {
-      e.preventDefault();
-      directToCheckout(b);
-    });
-  }
-  bindForm('ll-hero-form', 'll-hero-btn');
-  bindForm('ll-offer-form', 'll-offer-btn');
 
   /* ── Gallery & Video Switcher ── */
   var videoWrap = document.getElementById('ll-video-wrap');
