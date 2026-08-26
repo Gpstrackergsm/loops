@@ -553,6 +553,63 @@ iframe.ll-video {
   font-family: var(--fh); font-size: .68rem; font-weight: 800; width: 18px; height: 18px;
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
 }
+
+/* ─── MOBILE RESPONSIVE ──────────────────────── */
+@media(max-width:899px){
+  /* Header: hide text button, keep only bag icon */
+  .ll-header-actions .btn { display: none; }
+  .ll-header-bag { display: flex; }
+  .ll-header-in { height: 54px; }
+
+  /* Hero: full width single column */
+  .ll-hero { padding: 32px 0 44px; }
+  .ll-hero-grid { gap: 28px; }
+  .ll h1 { font-size: clamp(1.7rem, 7vw, 2.4rem); }
+  .ll-lead { font-size: 1rem; }
+  .ll-bundles { gap: 10px; }
+  .ll-bundle-card { padding: 12px 14px; }
+  .ll-bundle-price { font-size: 1.05rem; }
+  .ll-bundle-title { font-size: .88rem; }
+  .ll-bundle-sub { font-size: .72rem; }
+
+  /* CTA group: stack vertically */
+  .ll-cta-group { flex-direction: column; gap: 10px; }
+  .ll-cta-group .btn-ghost { display: none; }
+
+  /* Sections */
+  .ll-sec { padding: 44px 0; }
+  .ll h2 { font-size: clamp(1.35rem, 5.5vw, 2rem); }
+  .ll-sec-hd { margin-bottom: 28px; }
+
+  /* Offer box */
+  .ll-offer-in { padding: 28px 18px; }
+
+  /* Sticky bar: compact */
+  .ll-sticky { padding: 10px 16px; }
+  .ll-sticky .btn { font-size: .85rem; padding: 11px 18px; }
+  .ll-sticky-price { font-size: .88rem; }
+
+  /* VS table: scrollable */
+  .ll-vs { overflow-x: auto; }
+  .ll-vs-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+
+  /* Gallery */
+  .ll-gallery { padding: 12px; }
+  .ll-gallery-vp { aspect-ratio: 4/3; }
+  .ll-thumb-strip { gap: 6px; }
+  .ll-thumb { width: 52px; height: 52px; }
+}
+
+@media(max-width:480px){
+  .ll-w, .ll-wn { padding: 0 14px; }
+  .ll h1 { font-size: 1.65rem; }
+  .ll-bundle-badge { font-size: .65rem; padding: 3px 8px; }
+  .ll-bundle-card { padding: 11px 12px; }
+  .ll-bundle-right { min-width: 80px; }
+  .ll-trust-grid { grid-template-columns: repeat(2,1fr); }
+  .ll-sticky-name { font-size: .85rem; }
+  .ll-sticky-price { display: none; }
+}
 </style>
 
 <div class="ll">
